@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 835390562539109527}
   - component: {fileID: 2310797833065033711}
   - component: {fileID: 7207032072650089571}
+  - component: {fileID: -3107944146726055341}
   m_Layer: 0
   m_Name: Tile_R_TriggerBlock
   m_TagString: Untagged
@@ -107,5 +108,19 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 1, z: 1}
-  m_Center: {x: 0.25, y: 0, z: 0}
+  m_Size: {x: 0.125, y: 1, z: 1}
+  m_Center: {x: 0.435, y: 0, z: 0}
+--- !u!114 &-3107944146726055341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3462723369005731337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c082cecc7571c284faf61f395cce0219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionTime: 2.5
+  direction: 3
