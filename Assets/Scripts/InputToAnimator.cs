@@ -26,6 +26,10 @@ public class InputToAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (RoomTransition.IsTransitionInProgress())
+        {
+           return; 
+        }
         // Changing direction looks weird because the sprite won't immediately update if you switch
         timeSinceAnimating += Time.deltaTime;
 
@@ -109,4 +113,17 @@ public class InputToAnimator : MonoBehaviour
             }
         }
     }
+    
+    public RoomTransition.Direction GetPlayerDirection()
+    {
+        return currentSprite.sprite switch
+        {
+            var s when s == rightMoving || s == rightIdle => RoomTransition.Direction.Right, 
+            var s when s == leftMoving || s == leftIdle => RoomTransition.Direction.Left, 
+            var s when s == upMoving || s == upIdle => RoomTransition.Direction.Up, 
+            var s when s == downMoving || s == downIdle => RoomTransition.Direction.Down,
+            _ => RoomTransition.Direction.Right 
+        };
+    }
+
 }

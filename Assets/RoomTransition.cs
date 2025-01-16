@@ -7,6 +7,18 @@ public class RoomTransition : MonoBehaviour
     private Camera cam;
     public float transitionTime = 2.5f;
 
+    public float cameraDistanceY = 11f;
+    public float cameraDistanceX = 16f;
+    public float playerAutoWalkDistance = 2f;
+    
+    // used to inform ArrowKeyMovement.cs to stop moving during transition
+    private static bool isTransitionInProgress = false;
+    
+    public static bool IsTransitionInProgress()
+    {
+        return isTransitionInProgress;
+    }
+
     public enum Direction
     {
         Up,
@@ -25,58 +37,110 @@ public class RoomTransition : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Uses the playerAnimator's face direction to determine which room the player intends to enter.
+    /// Since the player overlaps the returning trigger when entering the next room, IsOppositeDirection will
+    /// prevent retriggering a camera transition.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            
+            Rigidbody rb = other.GetComponent<Rigidbody>();
+            InputToAnimator playerAnimator = other.GetComponent<InputToAnimator>();
+            Direction playerDirection = playerAnimator.GetPlayerDirection();
+
+            if (IsOppositeDirection(playerDirection))
             {
-                Debug.Log(direction);
+                return;
             }
-            if (Input.GetKeyDown(KeyCode.UpArrow) && direction == Direction.Up)
-            {
-                StartCoroutine(TransitionCamera(Direction.Up));
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow) && direction == Direction.Down)
-            {
-                StartCoroutine(TransitionCamera(Direction.Down));
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow) && direction == Direction.Left)
-            {
-                StartCoroutine(TransitionCamera(Direction.Left));
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow) && direction == Direction.Right)
-            {
-                StartCoroutine(TransitionCamera(Direction.Right));
-            };
+            
+            rb.linearVelocity = Vector3.zero;
+
+            StartCoroutine(TransitionCameraAndMovePlayer(direction, other.gameObject));
         }    
     }
 
-    private IEnumerator TransitionCamera(Direction moveDirection)
+    /// <summary>
+    /// Determine if a trigger's set camera transition direction is opposite to player's sprite direction
+    /// </summary>
+    /// <param name="playerDirection"></param>
+    /// <returns></returns>
+    private bool IsOppositeDirection(Direction playerDirection)
     {
-        
+        Debug.Log(playerDirection);
+        Debug.Log(direction);
+        if (direction == Direction.Right) { return playerDirection == Direction.Left; }
+        if (direction == Direction.Left) { return playerDirection == Direction.Right; }
+        if (direction == Direction.Up) { return playerDirection == Direction.Down; }
+        if (direction == Direction.Down) { return playerDirection == Direction.Up; }
+        return false;
+    }
+
+    private IEnumerator TransitionCameraAndMovePlayer(Direction moveDirection, GameObject player)
+    {
+        isTransitionInProgress = true; 
         Vector3 startPos = cam.transform.position;
         Vector3 endPos = startPos + GetDirectionVector(moveDirection);
-        Debug.Log($"Start position: {startPos}, End position: {endPos}");
 
         yield return StartCoroutine(
             MoveObjectOverTime(
                 cam.transform, startPos, endPos, transitionTime)
         );
-    }
+        
+        yield return StartCoroutine(MovePlayerForwardForDuration(player, moveDirection, 0.5f));
 
-    public static Vector3 GetDirectionVector(Direction direction)
+        isTransitionInProgress = false;
+    }
+    
+    /// <summary>
+    /// Translates the player's position (playerAutoWalkDistance) in the moveDirection via linear interpolation.
+    /// Chose to use player transform over linearVelocity because
+    /// the player would have a small tendency to get stuck during transition for some reason.
+    /// </summary>
+    private IEnumerator MovePlayerForwardForDuration(GameObject player, Direction moveDirection, float duration)
     {
-        switch (direction)
+        Transform playerTransform = player.transform;
+    
+        Vector3 movement = moveDirection switch
+        {
+            Direction.Up => Vector3.up * playerAutoWalkDistance,
+            Direction.Down => Vector3.down * playerAutoWalkDistance,
+            Direction.Left => Vector3.left * playerAutoWalkDistance,
+            Direction.Right => Vector3.right * playerAutoWalkDistance,
+            _ => Vector3.zero
+        };
+
+        Vector3 targetPosition = playerTransform.position + movement;
+
+        float startTime = Time.time;
+        Vector3 startPosition = playerTransform.position;
+
+        while (Time.time - startTime < duration)
+        {
+            float t = (Time.time - startTime) / duration;
+            playerTransform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            yield return null;
+        }
+        playerTransform.position = targetPosition;
+    }
+ 
+
+
+    private Vector3 GetDirectionVector(Direction moveDirection)
+    {
+        switch (moveDirection)
         {
             case Direction.Up:
-                return new Vector3(0, 20, 0);
+                return new Vector3(0, cameraDistanceY, 0);
             case Direction.Down:
-                return new Vector3(0, -20, 0);
+                return new Vector3(0, -cameraDistanceY, 0);
             case Direction.Left:
-                return new Vector3(-20, 0, 0);
+                return new Vector3(-cameraDistanceX, 0, 0);
             case Direction.Right:
-                return new Vector3(20, 0, 0);
+                return new Vector3(cameraDistanceX, 0, 0);
             default:
                 return new Vector3(0, 0, 0);
         }

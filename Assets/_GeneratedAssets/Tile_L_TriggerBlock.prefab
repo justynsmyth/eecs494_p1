@@ -108,8 +108,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.125, y: 1, z: 1}
-  m_Center: {x: -0.435, y: 0, z: 0}
+  m_Size: {x: 0.25, y: 1, z: 1}
+  m_Center: {x: -0.4, y: 0, z: 0}
 --- !u!114 &-560369327061548857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,4 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionTime: 2.5
+  cameraDistanceY: 11
+  cameraDistanceX: 16
+  movement_speed: 4
   direction: 2

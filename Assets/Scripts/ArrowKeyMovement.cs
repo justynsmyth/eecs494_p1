@@ -1,11 +1,12 @@
+using System;
 using UnityEngine;
 
 public class ArrowKeyMovement : MonoBehaviour
 {
     private Rigidbody rb;
 
-    public float movement_speed = 4;
-
+    public float movement_speed = 4f;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,9 +17,18 @@ public class ArrowKeyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 current_input = GetInput();
-        rb.linearVelocity = current_input * movement_speed;
+        if (!RoomTransition.IsTransitionInProgress())
+        {
+            Vector2 currentInput = GetInput();
+            Vector3 currentPos = rb.position;
+            rb.linearVelocity = currentInput * movement_speed;
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
     }
+ 
 
     Vector2 GetInput()
     {
