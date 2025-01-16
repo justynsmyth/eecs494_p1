@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ArrowKeyMovement : MonoBehaviour
 {
-    Rigidbody rb;
+    private Rigidbody rb;
 
     public float movement_speed = 4;
 
