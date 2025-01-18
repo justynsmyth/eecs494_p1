@@ -5,8 +5,10 @@ public class PlayerInput  : MonoBehaviour
 {
     private Rigidbody rb;
 
+    public GameManager manager;
     public float movement_speed = 4f;
-    
+    public bool control = true;
+
     void Start()
     {
         // Sets the Player Rigidbody to the rb variable
@@ -25,23 +27,32 @@ public class PlayerInput  : MonoBehaviour
     
     void Update()
     {
-        HandleInputMovement();
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (control)
         {
-            OnSpacePressed?.Invoke();
-            Debug.Log("Space Key Pressed");
-        }
+            HandleInputMovement();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                OnSpacePressed?.Invoke();
+                Debug.Log("Space Key Pressed");
+            }
 
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            OnXPressed?.Invoke();
-            Debug.Log("X Key Pressed");
-        }
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                OnXPressed?.Invoke();
+                Debug.Log("X Key Pressed");
+            }
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            OnZPressed?.Invoke();
-            Debug.Log("Z Key Pressed");
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                OnZPressed?.Invoke();
+                Debug.Log("Z Key Pressed");
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                manager.CheatModeToggle();
+                Debug.Log("1 Key Pressed");
+            }
         }
     }
 

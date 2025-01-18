@@ -6,11 +6,12 @@ TagManager:
   tags:
   - rupee
   - heart
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemy Layer
   - Water
   - UI
   - 

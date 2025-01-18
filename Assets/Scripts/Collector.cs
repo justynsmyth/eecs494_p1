@@ -3,6 +3,7 @@ using UnityEngine;
 public class Collector : MonoBehaviour
 {
     public AudioClip rupee_collection_sound_clip;
+    public AudioClip heart_collection_sound_clip;
 
     Inventory inventory;
     HasHealth healthBar;
@@ -45,6 +46,8 @@ public class Collector : MonoBehaviour
 
             Debug.Log("Collected heart!");
             Destroy(object_collided_with);
+
+            AudioSource.PlayClipAtPoint(heart_collection_sound_clip, Camera.main.transform.position);
         }
     }
 }

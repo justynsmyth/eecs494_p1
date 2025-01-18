@@ -6,7 +6,15 @@ public class Inventory : MonoBehaviour
 
     public void AddRupees(int num_rupees)
     {
-        rupee_count += num_rupees;
+        if (!GameManager.god_mode)
+        {
+            rupee_count += num_rupees;
+        }
+    }
+
+    public void MaximizeResources(int num_rupees)
+    {
+        rupee_count = num_rupees;
     }
 
     public int GetRupees()
