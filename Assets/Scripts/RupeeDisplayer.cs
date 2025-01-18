@@ -18,7 +18,7 @@ public class RupeeDisplayer : MonoBehaviour
         // If our inventory and text component exist, set the text to number of rupees we have
         if (inventory && text_component)
         {
-            text_component.text = inventory.GetRupees().ToString();
+            text_component.text = "Rupees: " + inventory.GetRupees().ToString();
         }
     }
 }

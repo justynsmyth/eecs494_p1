@@ -5,11 +5,13 @@ public class Collector : MonoBehaviour
     public AudioClip rupee_collection_sound_clip;
 
     Inventory inventory;
+    HasHealth healthBar;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         inventory = GetComponent<Inventory>();
+        healthBar = GetComponent<HasHealth>();
         if (inventory == null)
         {
             Debug.LogWarning("WARNING: Gameobject with a collector has no inventory to store things in!");
@@ -33,6 +35,16 @@ public class Collector : MonoBehaviour
 
             // Play sound effect
             AudioSource.PlayClipAtPoint(rupee_collection_sound_clip, Camera.main.transform.position);
+        }
+        else if (object_collided_with.tag == "heart")
+        {
+            if (healthBar)
+            {
+                healthBar.AlterHealth(1);
+            }
+
+            Debug.Log("Collected heart!");
+            Destroy(object_collided_with);
         }
     }
 }
