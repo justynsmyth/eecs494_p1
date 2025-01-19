@@ -12,7 +12,7 @@ public class RoomTransition : MonoBehaviour
     public float playerAutoWalkDistance = 2f;
     
     // used to inform ArrowKeyMovement.cs to stop moving during transition
-    private static bool isTransitionInProgress = false;
+    public static bool isTransitionInProgress = false;
     
     public static bool IsTransitionInProgress()
     {

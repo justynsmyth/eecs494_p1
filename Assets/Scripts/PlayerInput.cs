@@ -9,76 +9,52 @@ public class PlayerInput  : MonoBehaviour
     public float movement_speed = 4f;
     public bool control = true;
 
+    public static bool IsActionInProgress = false;
+
     void Start()
     {
-        // Sets the Player Rigidbody to the rb variable
         rb = GetComponent<Rigidbody>();
     }
 
-    // Use .invoke() to publish/trigger a message to subscribed classes
     public static event Action OnSpacePressed;
     public static event Action OnXPressed;
     public static event Action OnZPressed;
-    
-    // Subscribing to an Event via '+='
-    // PlayerInput.OnSpacePressed += FunctionNameHere()
-    // PlayerInput.OnXPressed += () => Debug.Log("X Was Pressed"); // Lambda
-    // Unsubscribing on Destruction via '-='
     
     void Update()
     {
         if (control)
         {
-            HandleInputMovement();
-            if (Input.GetKeyDown(KeyCode.Space))
+            HandleMovement();
+            if (!RoomTransition.IsTransitionInProgress() && !IsActionInProgress)
             {
-                OnSpacePressed?.Invoke();
-                Debug.Log("Space Key Pressed");
-            }
-
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                OnXPressed?.Invoke();
-                Debug.Log("X Key Pressed");
-            }
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                OnZPressed?.Invoke();
-                Debug.Log("Z Key Pressed");
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                manager.CheatModeToggle();
-                Debug.Log("1 Key Pressed");
+                HandleInputActions();
             }
         }
     }
 
-    private void HandleInputMovement()
+    private void HandleMovement()
     {
-        if (!RoomTransition.IsTransitionInProgress())
+        // Stop Movement
+        if (RoomTransition.IsTransitionInProgress() || IsActionInProgress)
         {
-            Vector2 currentInput = GetInput();
-            Vector3 currentVelocity = Vector2.zero;
-            Vector2 currentPos = rb.position;
+            rb.linearVelocity = Vector3.zero;
+            return;
+        }
+        // Calculate New Velocity
+        Vector2 currentInput = GetInput();
+        Vector3 currentVelocity = Vector2.zero;
+        Vector2 currentPos = rb.position;
 
-            if (currentInput.x != 0)
-            {
-                currentVelocity.x += currentInput.x * movement_speed;
-                currentVelocity.y += AlignToGrid(currentPos.y, 0.5f) / Time.fixedDeltaTime;
-            } else if (currentInput.y != 0)
-            {
-                currentVelocity.x += AlignToGrid(currentPos.x, 0.5f) / Time.fixedDeltaTime;
-                currentVelocity.y += currentInput.y * movement_speed;
-            }
-            rb.linearVelocity = currentVelocity; 
-        }
-        else
+        if (currentInput.x != 0)
         {
-            rb.linearVelocity = Vector2.zero;
+            currentVelocity.x += currentInput.x * movement_speed;
+            currentVelocity.y += AlignToGrid(currentPos.y, 0.5f) / Time.fixedDeltaTime;
+        } else if (currentInput.y != 0)
+        {
+            currentVelocity.x += AlignToGrid(currentPos.x, 0.5f) / Time.fixedDeltaTime;
+            currentVelocity.y += currentInput.y * movement_speed;
         }
+        rb.linearVelocity = currentVelocity; 
     }
     
     /// <summary>
@@ -113,5 +89,33 @@ public class PlayerInput  : MonoBehaviour
         }
 
         return new Vector2(horizontal_input, vertical_input);
+    }
+
+
+    private void HandleInputActions()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnSpacePressed?.Invoke();
+            Debug.Log("Space Key Pressed");
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            OnXPressed?.Invoke();
+            Debug.Log("X Key Pressed");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            OnZPressed?.Invoke();
+            Debug.Log("Z Key Pressed");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            manager.CheatModeToggle();
+            Debug.Log("1 Key Pressed");
+        } 
     }
 }

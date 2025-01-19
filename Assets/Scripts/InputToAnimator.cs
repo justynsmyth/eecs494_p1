@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class InputToAnimator : MonoBehaviour
 {
@@ -12,108 +13,103 @@ public class InputToAnimator : MonoBehaviour
     public Sprite rightMoving;
     public Sprite upMoving;
 
+    public Sprite downAttack;
+    public Sprite leftAttack;
+    public Sprite rightAttack;
+    public Sprite upAttack;
+
     public float moveRate = 0.15f;
+    public float attackAnimationDuration = 0.25f;
 
     private SpriteRenderer currentSprite;
     private float timeSinceAnimating;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentSprite = GetComponent<SpriteRenderer>();    
+        currentSprite = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (RoomTransition.IsTransitionInProgress())
+        if (RoomTransition.IsTransitionInProgress() || PlayerInput.IsActionInProgress)
         {
-           return; 
+            return; 
         }
-        // Changing direction looks weird because the sprite won't immediately update if you switch
+        
         timeSinceAnimating += Time.deltaTime;
 
+        HandleMovementAnimation();
+    }
+
+    private void HandleMovementAnimation()
+    {
         // Take horizontal movement inputs (A, D, <-, ->)
         float horizontal_input = Input.GetAxisRaw("Horizontal");
 
         // Take vertical movement inputs (W, S, up, down)
         float vertical_input = Input.GetAxisRaw("Vertical");
 
-        // Update the sprite here
-        // Moving right
+        // Update the sprite here based on movement
         if (horizontal_input > 0.0f)
         {
-            if (currentSprite.sprite == rightMoving && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = rightIdle;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite == rightIdle && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = rightMoving;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite != rightIdle && currentSprite != rightMoving)
-            {
-                currentSprite.sprite = rightMoving;
-            }
+            ChangeSprite(rightMoving, rightIdle);
         }
-        // Moving left
         else if (horizontal_input < 0.0f)
         {
-            if (currentSprite.sprite == leftMoving && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = leftIdle;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite == leftIdle && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = leftMoving;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite != leftIdle && currentSprite != leftMoving)
-            {
-                currentSprite.sprite = leftMoving;
-            }
+            ChangeSprite(leftMoving, leftIdle);
         }
-        // Moving up
         else if (vertical_input > 0.0f)
         {
-            if (currentSprite.sprite == upMoving && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = upIdle;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite == upIdle && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = upMoving;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite != upIdle && currentSprite != upMoving)
-            {
-                currentSprite.sprite = upMoving;
-            }
+            ChangeSprite(upMoving, upIdle);
         }
-        // Moving down
         else if (vertical_input < 0.0f)
         {
-            if (currentSprite.sprite == downMoving && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = downIdle;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite == downIdle && timeSinceAnimating >= moveRate)
-            {
-                currentSprite.sprite = downMoving;
-                timeSinceAnimating = 0.0f;
-            }
-            else if (currentSprite.sprite != downIdle && currentSprite != downMoving)
-            {
-                currentSprite.sprite = downMoving;
-            }
+            ChangeSprite(downMoving, downIdle);
         }
     }
-    
+
+    private void ChangeSprite(Sprite movingSprite, Sprite idleSprite)
+    {
+        if (currentSprite.sprite == movingSprite && timeSinceAnimating >= moveRate)
+        {
+            currentSprite.sprite = idleSprite;
+            timeSinceAnimating = 0.0f;
+        }
+        else if (currentSprite.sprite == idleSprite && timeSinceAnimating >= moveRate)
+        {
+            currentSprite.sprite = movingSprite;
+            timeSinceAnimating = 0.0f;
+        }
+        else if (currentSprite.sprite != idleSprite && currentSprite.sprite != movingSprite)
+        {
+            currentSprite.sprite = movingSprite;
+        }
+    }
+
+    public void HandleAttackAnimation()
+    {
+        Sprite previousSprite = currentSprite.sprite;
+        
+        currentSprite.sprite = GetPlayerDirection() switch
+        {
+            RoomTransition.Direction.Up => upAttack,
+            RoomTransition.Direction.Down => downAttack,
+            RoomTransition.Direction.Left => leftAttack,
+            RoomTransition.Direction.Right => rightAttack,
+            _ => rightAttack
+        };
+
+        StartCoroutine(ResetSpriteAfterAttack(previousSprite));
+    }
+
+    private IEnumerator ResetSpriteAfterAttack(Sprite previousSprite)
+    {
+        yield return new WaitForSeconds(attackAnimationDuration);
+
+        currentSprite.sprite = previousSprite;
+        
+    }
+
     public RoomTransition.Direction GetPlayerDirection()
     {
         return currentSprite.sprite switch
@@ -125,5 +121,4 @@ public class InputToAnimator : MonoBehaviour
             _ => RoomTransition.Direction.Right 
         };
     }
-
 }
