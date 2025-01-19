@@ -5,7 +5,6 @@ using static UnityEditor.FilePathAttribute;
 
 public class HasHealth : MonoBehaviour
 {
-    public GameManager manager;
 
     public float health;
     private float maxHealth;
@@ -49,6 +48,7 @@ public class HasHealth : MonoBehaviour
     {
         if (health <= 0) 
         { 
+            Vector3 position = gameObject.transform.position;
             Destroy(gameObject);
 
             // if player dies, game over and restart the game
@@ -62,7 +62,7 @@ public class HasHealth : MonoBehaviour
             {
                 if (Random.Range(0.0f, 1.0f) < itemDropRate)
                 {
-                    manager.DropItem(Random.Range(0, 2), gameObject.transform.position);
+                    GameManager.instance.DropItem(Random.Range(0, 2), position);
                 }
             }
         }    

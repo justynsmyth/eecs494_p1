@@ -103,7 +103,6 @@ public class PlayerInput  : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             OnXPressed?.Invoke();
-            Debug.Log("X Key Pressed");
         }
 
         if (Input.GetKeyDown(KeyCode.Z))

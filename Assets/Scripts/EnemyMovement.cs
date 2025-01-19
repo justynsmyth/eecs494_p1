@@ -17,6 +17,7 @@ public class EnemyMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         ChangeDirection(Random.Range(0, 4));
+        directionChangeRate = Random.Range(0f, 3f);
         timeSinceDirectionChange = 0;
     }
 
@@ -28,6 +29,7 @@ public class EnemyMovement : MonoBehaviour
         if (timeSinceDirectionChange >= directionChangeRate)
         {
             ChangeDirection(Random.Range(0, 4));
+            directionChangeRate = Random.Range(0f, 3f);
             timeSinceDirectionChange = 0;
         }
     }
@@ -38,7 +40,6 @@ public class EnemyMovement : MonoBehaviour
         Vector3 currentVelocity = Vector2.zero;
         Vector2 currentPos = rb.position;
 
-        Debug.Log(direction_index);
         if (direction_index == 0) 
         {
             currentVelocity.y = 1;
