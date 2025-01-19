@@ -7,6 +7,7 @@ TagManager:
   - rupee
   - heart
   - Enemy
+  - Weapon
   layers:
   - Default
   - TransparentFX

@@ -17,6 +17,13 @@ public class ChangeHealthOnTouch : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && (GameManager.god_mode || player_iframes))
         {
             return;
+        } else if (other.gameObject.CompareTag("Weapon"))
+        {
+            /**
+             * TODO: Add Enemy Logic for Weapon trigger collision
+             * 
+             */
+            Debug.Log("HIT BY SWORD");
         }
 
         /* Adjust hp */

@@ -8,16 +8,10 @@ public class Inventory : MonoBehaviour
     private InputToAnimator playerAnimator;
     private Rigidbody rb;
 
-    public BoxCollider swordCol;
 
     void Start()
     {
         playerAnimator = GetComponent<InputToAnimator>();
-
-        if (swordCol != null)
-        {
-            swordCol.enabled = false;
-        }
     }
 
     public void AddRupees(int num_rupees)
@@ -51,32 +45,27 @@ public class Inventory : MonoBehaviour
     }
 
     private Coroutine currentCoroutine;
+    
+    /**
+     * TODO: Need to Enable / Disable Sword. Need to move into Weapons.cs file for Bow and Sword Polymorphic purposes.
+     * ! Sword is always attached to X Button for now.
+     */
     private void AttackSword()
     {
         if (currentCoroutine != null)
         {
             return;
         }
-        currentCoroutine = StartCoroutine(HandleAttackAnimation());
+        currentCoroutine = StartCoroutine(HandleAttack());
     }
 
-    private IEnumerator HandleAttackAnimation()
+    private IEnumerator HandleAttack()
     {
         PlayerInput.IsActionInProgress = true;
 
-        if (swordCol != null)
-        {
-            swordCol.enabled = true;
-        }
-
-        playerAnimator.HandleAttackAnimation();
+        playerAnimator.HandleSwordAnimation();
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
-
-        if (swordCol != null)
-        {
-            swordCol.enabled = false;
-        }
 
         PlayerInput.IsActionInProgress = false;
         currentCoroutine = null;

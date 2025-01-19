@@ -21,21 +21,30 @@ public class InputToAnimator : MonoBehaviour
     public float moveRate = 0.15f;
     public float attackAnimationDuration = 0.25f;
 
+    // Used to enable/disable the sword's trigger boxes when a sword animation is triggered.
+    public BoxCollider leftSwordCollider;
+    public BoxCollider rightSwordCollider;
+    public BoxCollider upSwordCollider;
+    public BoxCollider downSwordCollider;
+
     private SpriteRenderer currentSprite;
     private float timeSinceAnimating;
+
+    private BoxCollider playerCollider;
 
     void Start()
     {
         currentSprite = GetComponent<SpriteRenderer>();
+        playerCollider = GetComponent<BoxCollider>();
     }
 
     void Update()
     {
         if (RoomTransition.IsTransitionInProgress() || PlayerInput.IsActionInProgress)
         {
-            return; 
+            return;
         }
-        
+
         timeSinceAnimating += Time.deltaTime;
 
         HandleMovementAnimation();
@@ -86,11 +95,14 @@ public class InputToAnimator : MonoBehaviour
         }
     }
 
-    public void HandleAttackAnimation()
+    public void HandleSwordAnimation()
     {
         Sprite previousSprite = currentSprite.sprite;
-        
-        currentSprite.sprite = GetPlayerDirection() switch
+
+        RoomTransition.Direction direction = GetPlayerDirection();
+        EnableSwordCollider(direction);
+
+        currentSprite.sprite = direction switch
         {
             RoomTransition.Direction.Up => upAttack,
             RoomTransition.Direction.Down => downAttack,
@@ -107,18 +119,46 @@ public class InputToAnimator : MonoBehaviour
         yield return new WaitForSeconds(attackAnimationDuration);
 
         currentSprite.sprite = previousSprite;
-        
+
+        leftSwordCollider.enabled = false;
+        rightSwordCollider.enabled = false;
+        upSwordCollider.enabled = false;
+        downSwordCollider.enabled = false;
+    }
+
+    private void EnableSwordCollider(RoomTransition.Direction dir)
+    {
+        leftSwordCollider.enabled = false;
+        rightSwordCollider.enabled = false;
+        upSwordCollider.enabled = false;
+        downSwordCollider.enabled = false;
+
+        switch (dir)
+        {
+            case RoomTransition.Direction.Up:
+                upSwordCollider.enabled = true;
+                break;
+            case RoomTransition.Direction.Down:
+                downSwordCollider.enabled = true;
+                break;
+            case RoomTransition.Direction.Left:
+                leftSwordCollider.enabled = true;
+                break;
+            case RoomTransition.Direction.Right:
+                rightSwordCollider.enabled = true;
+                break;
+        }
     }
 
     public RoomTransition.Direction GetPlayerDirection()
     {
         return currentSprite.sprite switch
         {
-            var s when s == rightMoving || s == rightIdle => RoomTransition.Direction.Right, 
-            var s when s == leftMoving || s == leftIdle => RoomTransition.Direction.Left, 
-            var s when s == upMoving || s == upIdle => RoomTransition.Direction.Up, 
+            var s when s == rightMoving || s == rightIdle => RoomTransition.Direction.Right,
+            var s when s == leftMoving || s == leftIdle => RoomTransition.Direction.Left,
+            var s when s == upMoving || s == upIdle => RoomTransition.Direction.Up,
             var s when s == downMoving || s == downIdle => RoomTransition.Direction.Down,
-            _ => RoomTransition.Direction.Right 
+            _ => RoomTransition.Direction.Right
         };
     }
 }
