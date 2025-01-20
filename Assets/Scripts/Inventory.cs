@@ -1,13 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Inventory : MonoBehaviour
 {
     int rupee_count = 0;
-
-    private InputToAnimator playerAnimator;
-    private Rigidbody rb;
-
+    
     public GameObject swordProjectilePrefab_Left;
     public GameObject swordProjectilePrefab_Right;
     public GameObject swordProjectilePrefab_Up;
@@ -18,13 +16,28 @@ public class Inventory : MonoBehaviour
     public GameObject ArrowProjectilePrefab_Up;
     public GameObject ArrowProjectilePrefab_Down;
 
-    public float ProjectileCooldown = 1f;
-    private bool onCooldown = false;
-    private float cooldownTimer = 0f;
+    private InputToAnimator playerAnimator;
+    private Rigidbody rb;
 
+    public float ProjectileCooldown = 1f;
+
+    public GameObject WeaponPrefab;
+
+    private Dictionary<string, Weapons> weapons;
     void Start()
     {
         playerAnimator = GetComponent<InputToAnimator>();
+        Sword sword = Instantiate(WeaponPrefab).GetComponent<Sword>();
+        Bow bow = Instantiate(WeaponPrefab).GetComponent<Bow>();
+
+        sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, 1f);
+        bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, 1f, this);
+        
+        weapons = new Dictionary<string, Weapons>
+        {
+            { "Sword", sword },
+            { "Bow",   bow }
+        }; 
     }
 
     public void AddRupees(int num_rupees)
@@ -46,120 +59,37 @@ public class Inventory : MonoBehaviour
     }
 
     public static bool HasSword = true;
-
+    
+    private Coroutine currentCoroutine;
+    
     void OnEnable()
     {
-        PlayerInput.OnXPressed += AttackSword;
-        PlayerInput.OnZPressed += AttackBow;
+        PlayerInput.OnXPressed += () => UseWeapon("Sword");
+        PlayerInput.OnZPressed += () => UseWeapon("Bow");
     }
 
     void OnDisable()
     {
-        PlayerInput.OnXPressed -= AttackSword;
-        PlayerInput.OnZPressed -= AttackBow;
+        PlayerInput.OnXPressed -= () => UseWeapon("Sword");
+        PlayerInput.OnZPressed -=  () => UseWeapon("Bow");
     }
-
-    private Coroutine currentCoroutine;
     
-    /**
-     * TODO: Need to Enable / Disable Sword. Need to move into Weapons.cs file for Bow and Sword Polymorphic purposes.
-     * ! Sword is always attached to X Button for now.
-     */
-    private void AttackSword()
+    private void UseWeapon(string weaponName)
     {
-        if (currentCoroutine != null)
-        {
-            return;
-        }
-        currentCoroutine = StartCoroutine(HandleSwordAttack());
+        if (currentCoroutine != null) return;
+        currentCoroutine = StartCoroutine(HandleAttack(weaponName));
     }
-
-    private IEnumerator HandleSwordAttack()
+    
+    private IEnumerator HandleAttack(string weaponName)
     {
         PlayerInput.IsActionInProgress = true;
+        weapons[weaponName].HandleAnimation(playerAnimator);
 
-        playerAnimator.HandleSwordAnimation();
-
-        if (GameManager.instance.player_health.HasMaxHealth() && !onCooldown)
-        {
-            onCooldown = true;
-            cooldownTimer = Time.time + ProjectileCooldown;
-            // Spawn a projectile sword
-            RoomTransition.Direction d = playerAnimator.GetPlayerDirection();
-            switch (d)
-            {
-                case RoomTransition.Direction.Up:
-                    Instantiate(swordProjectilePrefab_Up, transform.position, Quaternion.identity);
-                    break;
-                case RoomTransition.Direction.Down:
-                    Instantiate(swordProjectilePrefab_Down, transform.position, Quaternion.identity);
-                    break;
-                case RoomTransition.Direction.Left:
-                    Instantiate(swordProjectilePrefab_Left, transform.position, Quaternion.identity);
-                    break;
-                case RoomTransition.Direction.Right:
-                    Instantiate(swordProjectilePrefab_Right, transform.position, Quaternion.identity);
-                    break;
-            }
-        }
-        if (Time.time >= cooldownTimer)
-        {
-            onCooldown = false;
-        }
+        RoomTransition.Direction direction = playerAnimator.GetPlayerDirection();
+        Debug.Log(direction);
+        weapons[weaponName].Attack(transform.position, Quaternion.identity, direction);
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
-
-        PlayerInput.IsActionInProgress = false;
-        currentCoroutine = null;
-    }
-
-    private void AttackBow()
-    {
-        if (currentCoroutine != null)
-        {
-            return;
-        }
-        currentCoroutine = StartCoroutine(HandleBowAttack());
-    }
-
-    private IEnumerator HandleBowAttack()
-    {
-        PlayerInput.IsActionInProgress = true;
-
-        playerAnimator.HandleBowAnimation();
-
-        if (GetRupees() > 0)
-        {
-            onCooldown = true;
-            cooldownTimer = Time.time + ProjectileCooldown;
-            // Spawn a Arrow 
-            RoomTransition.Direction d = playerAnimator.GetPlayerDirection();
-            switch (d)
-            {
-                case RoomTransition.Direction.Up:
-                    Instantiate(ArrowProjectilePrefab_Up, transform.position, Quaternion.identity);
-                    break;
-                case RoomTransition.Direction.Down:
-                    Instantiate(ArrowProjectilePrefab_Down, transform.position, Quaternion.identity);
-                    break;
-                case RoomTransition.Direction.Left:
-                    Instantiate(ArrowProjectilePrefab_Left, transform.position, Quaternion.identity);
-                    break;
-                case RoomTransition.Direction.Right:
-                    Instantiate(ArrowProjectilePrefab_Right, transform.position, Quaternion.identity);
-                    break;
-            }
-            // Remove Rupee in exchange for Arrow 
-            AddRupees(-1);
-        }
-
-        if (Time.time >= cooldownTimer)
-        {
-            onCooldown = false;
-        }
-
-        yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
-
         PlayerInput.IsActionInProgress = false;
         currentCoroutine = null;
     }

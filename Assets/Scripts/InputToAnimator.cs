@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class InputToAnimator : MonoBehaviour
 {
@@ -36,6 +37,36 @@ public class InputToAnimator : MonoBehaviour
     private float timeSinceAnimating;
 
     private BoxCollider playerCollider;
+    
+    private void Awake()
+    {
+        spriteDirectionMap = new Dictionary<Sprite, RoomTransition.Direction>
+        {
+            // Right direction sprites
+            { rightMoving, RoomTransition.Direction.Right },
+            { rightIdle, RoomTransition.Direction.Right },
+            { rightAttack, RoomTransition.Direction.Right },
+            { rightBowAttack, RoomTransition.Direction.Right },
+
+            // Left direction sprites
+            { leftMoving, RoomTransition.Direction.Left },
+            { leftIdle, RoomTransition.Direction.Left },
+            { leftAttack, RoomTransition.Direction.Left },
+            { leftBowAttack, RoomTransition.Direction.Left },
+
+            // Up direction sprites
+            { upMoving, RoomTransition.Direction.Up },
+            { upIdle, RoomTransition.Direction.Up },
+            { upAttack, RoomTransition.Direction.Up },
+            { upBowAttack, RoomTransition.Direction.Up },
+
+            // Down direction sprites
+            { downMoving, RoomTransition.Direction.Down },
+            { downIdle, RoomTransition.Direction.Down },
+            { downAttack, RoomTransition.Direction.Down },
+            { downBowAttack, RoomTransition.Direction.Down },
+        };
+    }
 
     void Start()
     {
@@ -150,7 +181,6 @@ public class InputToAnimator : MonoBehaviour
     }
     
     
-    
     private void EnableSwordCollider(RoomTransition.Direction dir)
     {
         leftSwordCollider.enabled = false;
@@ -174,17 +204,12 @@ public class InputToAnimator : MonoBehaviour
                 break;
         }
     }
-
+    private Dictionary<Sprite, RoomTransition.Direction> spriteDirectionMap; 
     public RoomTransition.Direction GetPlayerDirection()
     {
-        return currentSprite.sprite switch
-        {
-            _ when currentSprite.sprite == rightMoving || currentSprite.sprite == rightIdle || currentSprite.sprite == rightAttack => RoomTransition.Direction.Right,
-            _ when currentSprite.sprite == leftMoving || currentSprite.sprite == leftIdle || currentSprite.sprite == leftAttack => RoomTransition.Direction.Left,
-            _ when currentSprite.sprite == upMoving || currentSprite.sprite == upIdle || currentSprite.sprite == upAttack => RoomTransition.Direction.Up,
-            _ when currentSprite.sprite == downMoving || currentSprite.sprite == downIdle || currentSprite.sprite == downAttack => RoomTransition.Direction.Down,
-            _ => RoomTransition.Direction.Right
-        };
-    }
+        return spriteDirectionMap.TryGetValue(currentSprite.sprite, out var direction)
+            ? direction
+            : RoomTransition.Direction.Right; // Default direction
+    } 
 
 }

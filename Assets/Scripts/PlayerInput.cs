@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using UnityEngine;
 
 public class PlayerInput  : MonoBehaviour
@@ -108,7 +109,6 @@ public class PlayerInput  : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             OnZPressed?.Invoke();
-            Debug.Log("Z Key Pressed");
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
