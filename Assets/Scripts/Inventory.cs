@@ -5,7 +5,10 @@ using System.Collections.Generic;
 public class Inventory : MonoBehaviour
 {
     int rupee_count = 0;
-    
+    int key_count = 0;
+
+    int max_inventory_value = 999;
+
     public GameObject swordProjectilePrefab_Left;
     public GameObject swordProjectilePrefab_Right;
     public GameObject swordProjectilePrefab_Up;
@@ -40,17 +43,35 @@ public class Inventory : MonoBehaviour
         }; 
     }
 
+    // private void Update()
+    // {
+    //     if (onCooldown && Time.time >= cooldownTimer)
+    //     {
+    //         onCooldown = false;
+    //         Debug.Log("Off cooldown: " + Time.time);
+    //     }
+    // }
+
     public void AddRupees(int num_rupees)
     {
-        if (!GameManager.god_mode)
+        if (!GameManager.god_mode && rupee_count + num_rupees <= max_inventory_value)
         {
             rupee_count += num_rupees;
         }
     }
 
-    public void MaximizeResources(int num_rupees)
+    public void AddKeys(int num_keys)
     {
-        rupee_count = num_rupees;
+        if (!GameManager.god_mode && key_count + num_keys <= max_inventory_value)
+        {
+            key_count += num_keys;
+        }
+    }
+
+    public void MaximizeResources()
+    {
+        rupee_count = max_inventory_value;
+        key_count = max_inventory_value;
     }
 
     public int GetRupees()
@@ -58,7 +79,13 @@ public class Inventory : MonoBehaviour
         return rupee_count;
     }
 
+    public int GetKeys()
+    {
+        return key_count;
+    }
+
     public static bool HasSword = true;
+    public static bool HasBow = true;
     
     private Coroutine currentCoroutine;
     

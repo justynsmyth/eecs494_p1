@@ -7,11 +7,13 @@ using Random = UnityEngine.Random;
 public class EnemyMovement : MonoBehaviour
 {
     public float movement_speed = 2f;
+    public float directionChangeRate = 2f;
+    public float spriteChangeRate = 0.15f;
 
     private Rigidbody rb;
-    private int direction_index;
     private float timeSinceDirectionChange;
-    private float directionChangeRate = 2f;
+    private float timeSinceAnimation;
+    private SpriteRenderer enemySprite;
     
     private ChangeHealthOnTouch changeHealthOnTouch;
 
@@ -20,6 +22,7 @@ public class EnemyMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         changeHealthOnTouch = GetComponent<ChangeHealthOnTouch>();
+        enemySprite = GetComponent<SpriteRenderer>();
 
         ChangeDirection(Random.Range(0, 4));
         directionChangeRate = Random.Range(0f, 3f);
@@ -30,6 +33,21 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         timeSinceDirectionChange += Time.deltaTime;
+        timeSinceAnimation += Time.deltaTime;
+
+        if (timeSinceAnimation >= spriteChangeRate) 
+        { 
+            if (enemySprite.flipX)
+            {
+                enemySprite.flipX = false;
+            }
+            else
+            {
+                enemySprite.flipX = true;
+            }
+
+            timeSinceAnimation = 0;
+        }
 
         if (changeHealthOnTouch.IsInvulnerable)
         {
