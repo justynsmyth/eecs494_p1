@@ -45,7 +45,7 @@ public class EnemyMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        ApplyGridSnap();
+        ApplyGridSnap(); // need to call at FixedTick so GridSnap can adjust Enemy's location each FixedFrame.
     }
 
     // up is 0, right is 1, down is 2, left is 3
@@ -108,6 +108,7 @@ public class EnemyMovement : MonoBehaviour
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
             return;
         }
+        // If an Enemy collides with anything, try to change directions (to maintain movement)
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
         {
             ChangeDirection(Random.Range(0,4));

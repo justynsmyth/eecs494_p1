@@ -18,6 +18,11 @@ public class InputToAnimator : MonoBehaviour
     public Sprite rightAttack;
     public Sprite upAttack;
 
+    public Sprite upBowAttack;
+    public Sprite downBowAttack;
+    public Sprite leftBowAttack;
+    public Sprite rightBowAttack;
+
     public float moveRate = 0.15f;
     public float attackAnimationDuration = 0.25f;
 
@@ -113,6 +118,24 @@ public class InputToAnimator : MonoBehaviour
 
         StartCoroutine(ResetSpriteAfterAttack(previousSprite));
     }
+    
+    public void HandleBowAnimation()
+    {
+        Sprite previousSprite = currentSprite.sprite;
+
+        RoomTransition.Direction direction = GetPlayerDirection();
+
+        currentSprite.sprite = direction switch
+        {
+            RoomTransition.Direction.Up => upBowAttack,
+            RoomTransition.Direction.Down => downBowAttack,
+            RoomTransition.Direction.Left => leftBowAttack,
+            RoomTransition.Direction.Right => rightBowAttack,
+            _ => rightBowAttack
+        };
+
+        StartCoroutine(ResetSpriteAfterAttack(previousSprite));
+    }
 
     private IEnumerator ResetSpriteAfterAttack(Sprite previousSprite)
     {
@@ -125,7 +148,9 @@ public class InputToAnimator : MonoBehaviour
         upSwordCollider.enabled = false;
         downSwordCollider.enabled = false;
     }
-
+    
+    
+    
     private void EnableSwordCollider(RoomTransition.Direction dir)
     {
         leftSwordCollider.enabled = false;
@@ -154,11 +179,12 @@ public class InputToAnimator : MonoBehaviour
     {
         return currentSprite.sprite switch
         {
-            var s when s == rightMoving || s == rightIdle => RoomTransition.Direction.Right,
-            var s when s == leftMoving || s == leftIdle => RoomTransition.Direction.Left,
-            var s when s == upMoving || s == upIdle => RoomTransition.Direction.Up,
-            var s when s == downMoving || s == downIdle => RoomTransition.Direction.Down,
+            _ when currentSprite.sprite == rightMoving || currentSprite.sprite == rightIdle || currentSprite.sprite == rightAttack => RoomTransition.Direction.Right,
+            _ when currentSprite.sprite == leftMoving || currentSprite.sprite == leftIdle || currentSprite.sprite == leftAttack => RoomTransition.Direction.Left,
+            _ when currentSprite.sprite == upMoving || currentSprite.sprite == upIdle || currentSprite.sprite == upAttack => RoomTransition.Direction.Up,
+            _ when currentSprite.sprite == downMoving || currentSprite.sprite == downIdle || currentSprite.sprite == downAttack => RoomTransition.Direction.Down,
             _ => RoomTransition.Direction.Right
         };
     }
+
 }

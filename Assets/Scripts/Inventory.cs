@@ -8,6 +8,19 @@ public class Inventory : MonoBehaviour
     private InputToAnimator playerAnimator;
     private Rigidbody rb;
 
+    public GameObject swordProjectilePrefab_Left;
+    public GameObject swordProjectilePrefab_Right;
+    public GameObject swordProjectilePrefab_Up;
+    public GameObject swordProjectilePrefab_Down;
+    
+    public GameObject ArrowProjectilePrefab_Left;
+    public GameObject ArrowProjectilePrefab_Right;
+    public GameObject ArrowProjectilePrefab_Up;
+    public GameObject ArrowProjectilePrefab_Down;
+
+    public float ProjectileCooldown = 1f;
+    private bool onCooldown = false;
+    private float cooldownTimer = 0f;
 
     void Start()
     {
@@ -37,11 +50,13 @@ public class Inventory : MonoBehaviour
     void OnEnable()
     {
         PlayerInput.OnXPressed += AttackSword;
+        PlayerInput.OnZPressed += AttackBow;
     }
 
     void OnDisable()
     {
         PlayerInput.OnXPressed -= AttackSword;
+        PlayerInput.OnZPressed -= AttackBow;
     }
 
     private Coroutine currentCoroutine;
@@ -56,14 +71,92 @@ public class Inventory : MonoBehaviour
         {
             return;
         }
-        currentCoroutine = StartCoroutine(HandleAttack());
+        currentCoroutine = StartCoroutine(HandleSwordAttack());
     }
 
-    private IEnumerator HandleAttack()
+    private IEnumerator HandleSwordAttack()
     {
         PlayerInput.IsActionInProgress = true;
 
         playerAnimator.HandleSwordAnimation();
+
+        if (GameManager.instance.player_health.HasMaxHealth() && !onCooldown)
+        {
+            onCooldown = true;
+            cooldownTimer = Time.time + ProjectileCooldown;
+            // Spawn a projectile sword
+            RoomTransition.Direction d = playerAnimator.GetPlayerDirection();
+            switch (d)
+            {
+                case RoomTransition.Direction.Up:
+                    Instantiate(swordProjectilePrefab_Up, transform.position, Quaternion.identity);
+                    break;
+                case RoomTransition.Direction.Down:
+                    Instantiate(swordProjectilePrefab_Down, transform.position, Quaternion.identity);
+                    break;
+                case RoomTransition.Direction.Left:
+                    Instantiate(swordProjectilePrefab_Left, transform.position, Quaternion.identity);
+                    break;
+                case RoomTransition.Direction.Right:
+                    Instantiate(swordProjectilePrefab_Right, transform.position, Quaternion.identity);
+                    break;
+            }
+        }
+        if (Time.time >= cooldownTimer)
+        {
+            onCooldown = false;
+        }
+
+        yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
+
+        PlayerInput.IsActionInProgress = false;
+        currentCoroutine = null;
+    }
+
+    private void AttackBow()
+    {
+        if (currentCoroutine != null)
+        {
+            return;
+        }
+        currentCoroutine = StartCoroutine(HandleBowAttack());
+    }
+
+    private IEnumerator HandleBowAttack()
+    {
+        PlayerInput.IsActionInProgress = true;
+
+        playerAnimator.HandleBowAnimation();
+
+        if (GetRupees() > 0)
+        {
+            onCooldown = true;
+            cooldownTimer = Time.time + ProjectileCooldown;
+            // Spawn a Arrow 
+            RoomTransition.Direction d = playerAnimator.GetPlayerDirection();
+            switch (d)
+            {
+                case RoomTransition.Direction.Up:
+                    Instantiate(ArrowProjectilePrefab_Up, transform.position, Quaternion.identity);
+                    break;
+                case RoomTransition.Direction.Down:
+                    Instantiate(ArrowProjectilePrefab_Down, transform.position, Quaternion.identity);
+                    break;
+                case RoomTransition.Direction.Left:
+                    Instantiate(ArrowProjectilePrefab_Left, transform.position, Quaternion.identity);
+                    break;
+                case RoomTransition.Direction.Right:
+                    Instantiate(ArrowProjectilePrefab_Right, transform.position, Quaternion.identity);
+                    break;
+            }
+            // Remove Rupee in exchange for Arrow 
+            AddRupees(-1);
+        }
+
+        if (Time.time >= cooldownTimer)
+        {
+            onCooldown = false;
+        }
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
 
