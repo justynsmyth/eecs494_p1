@@ -26,6 +26,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Screen.SetResolution(1024, 960, false);
+        if (player_health == null)
+        {
+            Debug.LogError("player_health is null");
+        }
+        if (inventory == null) { Debug.LogError("inventory is null"); }
+        if (rupee == null) { Debug.LogError("rupee is null"); }
+        if (heart == null) { Debug.LogError("heart is null"); }
     }
 
     public void DropItem(int index, Vector3 location)

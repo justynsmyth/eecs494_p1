@@ -22,6 +22,7 @@ public class HasHealth : MonoBehaviour
         if (health + num_health <= maxHealth)
         {
             health += num_health;
+            Debug.Log(health);
         }
         else
         {

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3839461685704853662}
   - component: {fileID: 5105658316627991060}
   - component: {fileID: 5911252161429005218}
+  - component: {fileID: 7034268990973011365}
   - component: {fileID: 1909051889503590453}
   - component: {fileID: 2765040916452782090}
   - component: {fileID: 2775540893218910377}
@@ -140,6 +141,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.9375, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &7034268990973011365
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466887526066340209}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9375, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1909051889503590453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,8 +189,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthInflictOnTouch: -0.5
   healthDamagedOnTouch: -1
-  knockback_power: 3.1
+  knockback_power: 3.5
   destroy_self_on_touch: 0
+  invulnerability_duration: 1.5
 --- !u!114 &2775540893218910377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,4 +204,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466cb4cebb1a3124dad40b1a08349a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement_speed: 1
+  movement_speed: 3

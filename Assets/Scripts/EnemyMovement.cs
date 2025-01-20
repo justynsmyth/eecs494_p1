@@ -1,6 +1,8 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -10,11 +12,14 @@ public class EnemyMovement : MonoBehaviour
     private int direction_index;
     private float timeSinceDirectionChange;
     private float directionChangeRate = 2f;
+    
+    private ChangeHealthOnTouch changeHealthOnTouch;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        changeHealthOnTouch = GetComponent<ChangeHealthOnTouch>();
 
         ChangeDirection(Random.Range(0, 4));
         directionChangeRate = Random.Range(0f, 3f);
@@ -26,6 +31,10 @@ public class EnemyMovement : MonoBehaviour
     {
         timeSinceDirectionChange += Time.deltaTime;
 
+        if (changeHealthOnTouch.IsInvulnerable)
+        {
+            return;
+        }
         if (timeSinceDirectionChange >= directionChangeRate)
         {
             ChangeDirection(Random.Range(0, 4));
@@ -34,11 +43,15 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        ApplyGridSnap();
+    }
+
     // up is 0, right is 1, down is 2, left is 3
     void ChangeDirection(int direction_index)
     {
         Vector3 currentVelocity = Vector2.zero;
-        Vector2 currentPos = rb.position;
 
         if (direction_index == 0) 
         {
@@ -56,32 +69,48 @@ public class EnemyMovement : MonoBehaviour
         {
             currentVelocity.x = -1;
         }
-
         rb.linearVelocity = currentVelocity * movement_speed;
+    }
+    
+    private void ApplyGridSnap()
+    {
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 currentPos = rb.position;
+
+        if (currentVelocity.x != 0)
+        {
+            currentPos.y = Mathf.Lerp(currentPos.y, AlignToGridPosition(currentPos.y, 0.5f), Time.deltaTime * movement_speed);
+        }
+        else if (currentVelocity.y != 0)
+        {
+            currentPos.x = Mathf.Lerp(currentPos.x, AlignToGridPosition(currentPos.x, 0.5f), Time.deltaTime * movement_speed);
+        }
+
+        rb.MovePosition(currentPos);
     }
 
     /// <summary>
-    /// Takes a position and adjusts it to align with a factor value.
+    /// Calculates the target grid position for alignment.
     /// </summary>
-    /// <param name="val">X or Y position of a player</param>
-    /// <param name="factor">Expected Grid Size to 'Snap' to</param>
-    private float AlignToGrid(float val, float factor)
+    /// <param name="val">The current position value (X or Y).</param>
+    /// <param name="factor">The grid size to snap to.</param>
+    /// <returns>The nearest grid position.</returns>
+    private float AlignToGridPosition(float val, float factor)
     {
-        float r = val % factor;
-        float h = factor / 2;
-        if (r < h)
-        {
-            return -r;
-        }
-
-        return factor - r;
+        return Mathf.Round(val / factor) * factor;
     }
+   
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
+        {
+            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+            return;
+        }
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
         {
-            rb.linearVelocity = Vector2.zero;
+            ChangeDirection(Random.Range(0,4));
         }
     }
 }

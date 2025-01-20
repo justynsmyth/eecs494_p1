@@ -10,8 +10,18 @@ public class ChangeHealthOnTouch : MonoBehaviour
     public float healthDamagedOnTouch = -1f;
     public float knockback_power;
     public bool destroy_self_on_touch = false;
+    public float invulnerability_duration = 1.5f;
 
     private bool player_iframes = false;
+    
+    public bool IsInvulnerable = false;
+
+    private SpriteRenderer sr;
+
+    void Start()
+    {
+        sr = GetComponent<SpriteRenderer>();
+    }
 
     public void OnTriggerEnter(Collider other)
     {
@@ -30,13 +40,24 @@ public class ChangeHealthOnTouch : MonoBehaviour
             HandleHealthAndKnockback(selfCollider, other, healthInflictOnTouch);
         } else if (other.gameObject.CompareTag("Weapon"))
         {
-            HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch); 
+            if (IsInvulnerable) return;
+            StartCoroutine(InvulnerabilityCooldown()); 
+            HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
+
         }
 
 
         /* Destroy self */
         if (destroy_self_on_touch)
             Destroy(gameObject);
+    }
+
+    private IEnumerator InvulnerabilityCooldown()
+    {
+        IsInvulnerable = true;
+        StartCoroutine(EnemyHitFlash(sr));
+        yield return new WaitForSeconds(invulnerability_duration);
+        IsInvulnerable = false;
     }
 
     private void HandleHealthAndKnockback(Collider attacker, Collider target, float damage)
@@ -70,8 +91,7 @@ public class ChangeHealthOnTouch : MonoBehaviour
         player_iframes = true;
         player.control = false;
 
-        Debug.Log("Player was hit");
-        while (timeElapsed < 2f)
+        while (timeElapsed < invulnerability_duration)
         {
             if (currentSprite.color == Color.red)
             {
@@ -86,7 +106,7 @@ public class ChangeHealthOnTouch : MonoBehaviour
                 currentSprite.color = Color.red;
             }
 
-            if (timeElapsed > 0.5f)
+            if (timeElapsed > invulnerability_duration)
             {
                 player.control = true;
             }
@@ -98,7 +118,29 @@ public class ChangeHealthOnTouch : MonoBehaviour
         player_iframes = false;
         player.control = true;
         currentSprite.color = Color.white;
+    }
+    
+    private IEnumerator EnemyHitFlash(SpriteRenderer enemySprite)
+    {
+        float timeElapsed = 0f;
+        while (timeElapsed < invulnerability_duration)
+        {
+            if (enemySprite.color == Color.red)
+            {
+                enemySprite.color = Color.blue;
+            }
+            else if (enemySprite.color == Color.blue)
+            {
+                enemySprite.color = Color.white;
+            }
+            else
+            {
+                enemySprite.color = Color.red;
+            }
 
-        Debug.Log("Player out of invincibility");
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        enemySprite.color = Color.white; // Reset color after flashing
     }
 }
