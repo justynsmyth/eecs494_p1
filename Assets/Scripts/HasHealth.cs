@@ -67,10 +67,7 @@ public class HasHealth : MonoBehaviour
             // if enemy dies, potentially drops an item
             if (gameObject.tag == "Enemy")
             {
-                if (Random.Range(0.0f, 1.0f) < itemDropRate)
-                {
-                    GameManager.instance.DropItem(Random.Range(0, 2), position);
-                }
+                GameManager.instance.DropItem(Random.Range(0, 2), position, itemDropRate);
             }
         }    
     }

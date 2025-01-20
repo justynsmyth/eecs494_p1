@@ -10,10 +10,11 @@ public class ChangeHealthOnTouch : MonoBehaviour
     public float healthDamagedOnTouch = -1f;
     public float knockback_power;
     public bool destroy_self_on_touch = false;
-    public float invulnerability_duration = 1.5f;
+    public float invulnerability_duration = 1.0f;
 
     private bool player_iframes = false;
-    
+    private float playerControlLossTime = 0.25f;
+
     public bool IsInvulnerable = false;
 
     private SpriteRenderer sr;
@@ -45,7 +46,6 @@ public class ChangeHealthOnTouch : MonoBehaviour
             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
 
         }
-
 
         /* Destroy self */
         if (destroy_self_on_touch)
@@ -90,25 +90,14 @@ public class ChangeHealthOnTouch : MonoBehaviour
         float timeElapsed = 0f;
         player_iframes = true;
         player.control = false;
+        currentSprite.color = Color.red;
 
         while (timeElapsed < invulnerability_duration)
         {
-            if (currentSprite.color == Color.red)
-            {
-                currentSprite.color = Color.blue;
-            }
-            else if (currentSprite.color == Color.blue)
-            {
-                currentSprite.color = Color.white;
-            }
-            else
-            {
-                currentSprite.color = Color.red;
-            }
-
-            if (timeElapsed > invulnerability_duration)
+            if (timeElapsed > playerControlLossTime)
             {
                 player.control = true;
+                currentSprite.color = Color.white;
             }
 
             timeElapsed += Time.deltaTime;

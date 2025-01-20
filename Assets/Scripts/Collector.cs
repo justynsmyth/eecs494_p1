@@ -4,6 +4,7 @@ public class Collector : MonoBehaviour
 {
     public AudioClip rupee_collection_sound_clip;
     public AudioClip heart_collection_sound_clip;
+    public AudioClip key_collection_sound_clip;
 
     Inventory inventory;
     HasHealth healthBar;
@@ -48,6 +49,19 @@ public class Collector : MonoBehaviour
             Destroy(object_collided_with);
 
             AudioSource.PlayClipAtPoint(heart_collection_sound_clip, Camera.main.transform.position);
+        }
+        else if (object_collided_with.tag == "key")
+        {
+            if (inventory)
+            {
+                inventory.AddKeys(1);
+            }
+
+            Debug.Log("Collected key!");
+            Destroy(object_collided_with);
+
+            // Play sound effect
+            AudioSource.PlayClipAtPoint(key_collection_sound_clip, Camera.main.transform.position);
         }
     }
 }

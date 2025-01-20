@@ -192,6 +192,7 @@ MonoBehaviour:
   knockback_power: 3.5
   destroy_self_on_touch: 0
   invulnerability_duration: 1.5
+  IsInvulnerable: 0
 --- !u!114 &2775540893218910377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,4 +205,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 466cb4cebb1a3124dad40b1a08349a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement_speed: 3
+  movement_speed: 2

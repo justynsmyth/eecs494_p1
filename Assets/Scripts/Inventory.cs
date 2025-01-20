@@ -4,9 +4,11 @@ using System.Collections;
 public class Inventory : MonoBehaviour
 {
     int rupee_count = 0;
+    int key_count = 0;
+
+    int max_inventory_value = 999;
 
     private InputToAnimator playerAnimator;
-    private Rigidbody rb;
 
     public GameObject swordProjectilePrefab_Left;
     public GameObject swordProjectilePrefab_Right;
@@ -27,17 +29,35 @@ public class Inventory : MonoBehaviour
         playerAnimator = GetComponent<InputToAnimator>();
     }
 
+    private void Update()
+    {
+        if (onCooldown && Time.time >= cooldownTimer)
+        {
+            onCooldown = false;
+            Debug.Log("Off cooldown: " + Time.time);
+        }
+    }
+
     public void AddRupees(int num_rupees)
     {
-        if (!GameManager.god_mode)
+        if (!GameManager.god_mode && rupee_count + num_rupees <= max_inventory_value)
         {
             rupee_count += num_rupees;
         }
     }
 
-    public void MaximizeResources(int num_rupees)
+    public void AddKeys(int num_keys)
     {
-        rupee_count = num_rupees;
+        if (!GameManager.god_mode && key_count + num_keys <= max_inventory_value)
+        {
+            key_count += num_keys;
+        }
+    }
+
+    public void MaximizeResources()
+    {
+        rupee_count = max_inventory_value;
+        key_count = max_inventory_value;
     }
 
     public int GetRupees()
@@ -45,18 +65,30 @@ public class Inventory : MonoBehaviour
         return rupee_count;
     }
 
+    public int GetKeys()
+    {
+        return key_count;
+    }
+
     public static bool HasSword = true;
+    public static bool HasBow = false;
 
     void OnEnable()
     {
         PlayerInput.OnXPressed += AttackSword;
-        PlayerInput.OnZPressed += AttackBow;
+        if (HasBow)
+        {
+            PlayerInput.OnZPressed += AttackBow;
+        }
     }
 
     void OnDisable()
     {
         PlayerInput.OnXPressed -= AttackSword;
-        PlayerInput.OnZPressed -= AttackBow;
+        if (HasBow)
+        {
+            PlayerInput.OnZPressed -= AttackBow;
+        }
     }
 
     private Coroutine currentCoroutine;
@@ -84,6 +116,7 @@ public class Inventory : MonoBehaviour
         {
             onCooldown = true;
             cooldownTimer = Time.time + ProjectileCooldown;
+            Debug.Log("Cooldown timer: " + cooldownTimer);
             // Spawn a projectile sword
             RoomTransition.Direction d = playerAnimator.GetPlayerDirection();
             switch (d)
@@ -101,10 +134,6 @@ public class Inventory : MonoBehaviour
                     Instantiate(swordProjectilePrefab_Right, transform.position, Quaternion.identity);
                     break;
             }
-        }
-        if (Time.time >= cooldownTimer)
-        {
-            onCooldown = false;
         }
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
