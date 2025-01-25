@@ -1,9 +1,7 @@
 ﻿/* A component that implements the behavior of the 494 FunBall */
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class EECS494FunBallController : MonoBehaviour {
 
