@@ -18,8 +18,6 @@
  * - AY
  */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EECS494FunBallAesthetics : MonoBehaviour {

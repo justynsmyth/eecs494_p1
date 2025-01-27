@@ -85,7 +85,7 @@ public class Inventory : MonoBehaviour
     }
 
     public static bool HasSword = true;
-    public static bool HasBow = true;
+    public static bool HasBow = false;
     
     private Coroutine currentCoroutine;
     
@@ -98,7 +98,7 @@ public class Inventory : MonoBehaviour
     void OnDisable()
     {
         PlayerInput.OnXPressed -= () => UseWeapon("Sword");
-        PlayerInput.OnZPressed -=  () => UseWeapon("Bow");
+        PlayerInput.OnZPressed -= () => UseWeapon("Bow");
     }
     
     private void UseWeapon(string weaponName)
