@@ -1,7 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.FilePathAttribute;
 
 public class HasHealth : MonoBehaviour
 {

@@ -33,8 +33,8 @@ public class Inventory : MonoBehaviour
         Sword sword = Instantiate(WeaponPrefab).GetComponent<Sword>();
         Bow bow = Instantiate(WeaponPrefab).GetComponent<Bow>();
 
-        sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, 1f);
-        bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, 1f, this);
+        sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, ProjectileCooldown);
+        bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, this);
         
         weapons = new Dictionary<string, Weapons>
         {
