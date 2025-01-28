@@ -4,7 +4,7 @@ using UnityEngine;
 public class RoomTransition : MonoBehaviour
 {
     private Camera cam;
-    public float transitionTime = 2.5f;
+    public static float transitionTime = 2.5f;
 
     public float cameraDistanceY = 11f;
     public float cameraDistanceX = 16f;
@@ -12,6 +12,8 @@ public class RoomTransition : MonoBehaviour
     
     // used to inform ArrowKeyMovement.cs to stop moving during transition
     public static bool isTransitionInProgress = false;
+
+    public GameObject PushBlock;
     
     public static bool IsTransitionInProgress()
     {
@@ -59,6 +61,15 @@ public class RoomTransition : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
 
             StartCoroutine(TransitionCameraAndMovePlayer(direction, other.gameObject));
+
+            if (PushBlock != null)
+            {
+                var pb = PushBlock.GetComponent<PushBlock>();
+                if (pb != null)
+                {
+                    pb.ResetBlock();
+                } 
+            }
         }    
     }
 

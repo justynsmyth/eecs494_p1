@@ -16,12 +16,12 @@ TagManager:
   - Enemy Layer
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Block
+  - Weapon
+  - GroundEnemy
+  - Player
+  - Doorway
+  - Effect
   - 
   - 
   - 

@@ -113,7 +113,6 @@ public class Inventory : MonoBehaviour
         weapons[weaponName].HandleAnimation(playerAnimator);
 
         RoomTransition.Direction direction = playerAnimator.GetPlayerDirection();
-        Debug.Log(direction);
         weapons[weaponName].Attack(transform.position, Quaternion.identity, direction);
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);

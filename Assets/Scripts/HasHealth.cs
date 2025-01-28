@@ -45,7 +45,6 @@ public class HasHealth : MonoBehaviour
 
     public bool HasMaxHealth()
     {
-        Debug.Log($"Player has health: {health}");
         return health == maxHealth;
     }
 

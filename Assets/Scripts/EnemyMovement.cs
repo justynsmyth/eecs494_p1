@@ -6,6 +6,8 @@ public class EnemyMovement : MonoBehaviour
     public float movement_speed = 2f;
     public float directionChangeRate = 2f;
     public float spriteChangeRate = 0.15f;
+    public float timeCollisionDirectionChange = 1f;
+ 
 
     private Rigidbody rb;
     private float timeSinceDirectionChange;
@@ -13,6 +15,7 @@ public class EnemyMovement : MonoBehaviour
     private SpriteRenderer enemySprite;
     
     private ChangeHealthOnTouch changeHealthOnTouch;
+    private int currentDirection;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -52,7 +55,12 @@ public class EnemyMovement : MonoBehaviour
         }
         if (timeSinceDirectionChange >= directionChangeRate)
         {
-            ChangeDirection(Random.Range(0, 4));
+            int newDirection;
+            do
+            {
+                newDirection = Random.Range(0, 4);
+            } while (newDirection == currentDirection); 
+            ChangeDirection(newDirection);
             directionChangeRate = Random.Range(0f, 3f);
             timeSinceDirectionChange = 0;
         }
@@ -67,6 +75,7 @@ public class EnemyMovement : MonoBehaviour
     void ChangeDirection(int direction_index)
     {
         Vector3 currentVelocity = Vector2.zero;
+        currentDirection = direction_index;
 
         if (direction_index == 0) 
         {
@@ -114,19 +123,25 @@ public class EnemyMovement : MonoBehaviour
     {
         return Mathf.Round(val / factor) * factor;
     }
-   
+
+    private float lastCollisionDirectionChangeTime;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Player"))
-        {
-            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-            return;
-        }
         // If an Enemy collides with anything, try to change directions (to maintain movement)
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
         {
-            ChangeDirection(Random.Range(0,4));
+            if (Time.time >= timeCollisionDirectionChange + lastCollisionDirectionChangeTime)
+            {
+                int newDirection;
+                do
+                {
+                    newDirection = Random.Range(0, 4);
+                } while (newDirection == currentDirection);
+
+                ChangeDirection(newDirection);
+                lastCollisionDirectionChangeTime = Time.time;
+            }
         }
     }
 }

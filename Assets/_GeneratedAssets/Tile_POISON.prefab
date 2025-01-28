@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1396736805592726698}
   - component: {fileID: 8117401902243331458}
   - component: {fileID: 2787320845278821394}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Tile_POISON
   m_TagString: Untagged
   m_Icon: {fileID: 0}

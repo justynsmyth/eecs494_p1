@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1909051889503590453}
   - component: {fileID: 2765040916452782090}
   - component: {fileID: 2775540893218910377}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Stalfos
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -206,3 +206,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement_speed: 2
+  directionChangeRate: 2
+  spriteChangeRate: 0.15
+  timeCollisionDirectionChange: 1

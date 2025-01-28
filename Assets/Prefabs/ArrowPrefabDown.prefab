@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -2916474504801478508}
   - component: {fileID: -4954584674182946049}
   - component: {fileID: 6556424522244103724}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ArrowPrefabDown
   m_TagString: Weapon
   m_Icon: {fileID: 0}
