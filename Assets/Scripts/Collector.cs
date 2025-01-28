@@ -33,6 +33,7 @@ public class Collector : MonoBehaviour
             }
 
             Debug.Log("Collected rupee!");
+            Destroy(object_collided_with);
 
             // Play sound effect
             AudioSource.PlayClipAtPoint(rupee_collection_sound_clip, Camera.main.transform.position);
@@ -45,6 +46,7 @@ public class Collector : MonoBehaviour
             }
 
             Debug.Log("Collected heart!");
+            Destroy(object_collided_with);
 
             AudioSource.PlayClipAtPoint(heart_collection_sound_clip, Camera.main.transform.position);
         }
@@ -56,16 +58,18 @@ public class Collector : MonoBehaviour
             }
 
             Debug.Log("Collected key!");
-            
+            Destroy(object_collided_with);
+
+            // Play sound effect
             AudioSource.PlayClipAtPoint(key_collection_sound_clip, Camera.main.transform.position);
         }
         else if (object_collided_with.tag == "bow")
         {
             Inventory.HasBow = true;
 
+            Destroy(object_collided_with);
+
             // play sound effect and animation
         }
-
-        Destroy(object_collided_with);
     }
 }

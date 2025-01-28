@@ -38,7 +38,6 @@ public class PushBlock : MonoBehaviour
         if (isPushed) return;
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Pushing this way: " + Input.GetAxisRaw(pushType.ToString()));
             if (Input.GetAxisRaw(pushType.ToString()) == playerPushDirection && !isMoving)
             {
                 holdTime += Time.deltaTime;

@@ -43,15 +43,6 @@ public class Inventory : MonoBehaviour
         }; 
     }
 
-    // private void Update()
-    // {
-    //     if (onCooldown && Time.time >= cooldownTimer)
-    //     {
-    //         onCooldown = false;
-    //         Debug.Log("Off cooldown: " + Time.time);
-    //     }
-    // }
-
     public void AddRupees(int num_rupees)
     {
         if (!GameManager.god_mode && rupee_count + num_rupees <= max_inventory_value)

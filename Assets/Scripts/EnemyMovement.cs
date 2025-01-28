@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Xml;
-using System.Xml.Schema;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +8,7 @@ public class EnemyMovement : MonoBehaviour
     public float spriteChangeRate = 0.15f;
     public float timeCollisionDirectionChange = 1f;
     public Sprite movingSprite;
- 
+
 
     private Rigidbody rb;
     private float timeSinceDirectionChange;
@@ -47,7 +44,7 @@ public class EnemyMovement : MonoBehaviour
         timeSinceDirectionChange += Time.deltaTime;
         timeSinceAnimation += Time.deltaTime;
 
-        if (timeSinceAnimation >= spriteChangeRate) 
+        if (timeSinceAnimation >= spriteChangeRate)
         {
             AnimateSprite();
 
@@ -155,7 +152,7 @@ public class EnemyMovement : MonoBehaviour
             Debug.Log("velocity: " + rb.linearVelocity);
         }
     }
-    
+
     private void ApplyGridSnap()
     {
         Vector3 currentVelocity = rb.linearVelocity;
