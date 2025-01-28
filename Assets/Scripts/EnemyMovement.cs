@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.Xml;
+using System.Xml.Schema;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,15 +10,19 @@ public class EnemyMovement : MonoBehaviour
     public float directionChangeRate = 2f;
     public float spriteChangeRate = 0.15f;
     public float timeCollisionDirectionChange = 1f;
+    public Sprite movingSprite;
  
 
     private Rigidbody rb;
     private float timeSinceDirectionChange;
     private float timeSinceAnimation;
     private SpriteRenderer enemySprite;
-    
+    private Sprite defaultSprite;
+
     private ChangeHealthOnTouch changeHealthOnTouch;
-    private int currentDirection;
+    private Vector3 currentDirection;
+
+    private bool gelPause;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,10 +30,15 @@ public class EnemyMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         changeHealthOnTouch = GetComponent<ChangeHealthOnTouch>();
         enemySprite = GetComponent<SpriteRenderer>();
+        defaultSprite = GetComponent<SpriteRenderer>().sprite;
 
-        ChangeDirection(Random.Range(0, 4));
+        ChangeDirection();
+        currentDirection = rb.linearVelocity;
+
         directionChangeRate = Random.Range(0f, 3f);
         timeSinceDirectionChange = 0;
+
+        gelPause = false;
     }
 
     // Update is called once per frame
@@ -36,15 +48,8 @@ public class EnemyMovement : MonoBehaviour
         timeSinceAnimation += Time.deltaTime;
 
         if (timeSinceAnimation >= spriteChangeRate) 
-        { 
-            if (enemySprite.flipX)
-            {
-                enemySprite.flipX = false;
-            }
-            else
-            {
-                enemySprite.flipX = true;
-            }
+        {
+            AnimateSprite();
 
             timeSinceAnimation = 0;
         }
@@ -55,13 +60,31 @@ public class EnemyMovement : MonoBehaviour
         }
         if (timeSinceDirectionChange >= directionChangeRate)
         {
-            int newDirection;
-            do
+            if (gameObject.name == "Gel")
             {
-                newDirection = Random.Range(0, 4);
-            } while (newDirection == currentDirection); 
-            ChangeDirection(newDirection);
-            directionChangeRate = Random.Range(0f, 3f);
+                directionChangeRate = 1f;
+                if (gelPause)
+                {
+                    rb.linearVelocity = Vector2.zero;
+                    gelPause = false;
+                }
+                else
+                {
+                    ChangeDirection();
+                    gelPause = true;
+                }
+            }
+            else
+            {
+                do
+                {
+                    ChangeDirection();
+                } while (rb.linearVelocity == currentDirection);
+                currentDirection = rb.linearVelocity;
+
+                directionChangeRate = Random.Range(0f, 3f);
+            }
+
             timeSinceDirectionChange = 0;
         }
     }
@@ -71,43 +94,86 @@ public class EnemyMovement : MonoBehaviour
         ApplyGridSnap(); // need to call at FixedTick so GridSnap can adjust Enemy's location each FixedFrame.
     }
 
-    // up is 0, right is 1, down is 2, left is 3
-    void ChangeDirection(int direction_index)
+    // If the enemy has a sprite when animated, it will alternate between that sprite and its default sprite. Otherwise, it will flip sprite direction
+    void AnimateSprite()
     {
-        Vector3 currentVelocity = Vector2.zero;
-        currentDirection = direction_index;
-
-        if (direction_index == 0) 
+        if (movingSprite != null)
         {
-            currentVelocity.y = 1;
-        }
-        else if (direction_index == 1)
-        {
-            currentVelocity.x = 1;
-        }
-        else if (direction_index == 2)
-        {
-            currentVelocity.y = -1;
+            if (enemySprite.sprite == defaultSprite)
+            {
+                enemySprite.sprite = movingSprite;
+            }
+            else
+            {
+                enemySprite.sprite = defaultSprite;
+            }
         }
         else
         {
-            currentVelocity.x = -1;
+            if (enemySprite.flipX)
+            {
+                enemySprite.flipX = false;
+            }
+            else
+            {
+                enemySprite.flipX = true;
+            }
         }
-        rb.linearVelocity = currentVelocity * movement_speed;
+    }
+
+    // up is 0, right is 1, down is 2, left is 3
+    void ChangeDirection()
+    {
+        Vector3 currentVelocity = Vector2.zero;
+
+        float xValue = Random.Range(-1f, 1f);
+        float yValue = Random.Range(-1f, 1f);
+
+        if (gameObject.name != "Keese")
+        {
+            int horizontal = Random.Range(0, 2);
+
+            if (horizontal == 1)
+            {
+                yValue = 0f;
+            }
+            else
+            {
+                xValue = 0f;
+            }
+        }
+
+        currentVelocity.x = xValue;
+        currentVelocity.y = yValue;
+
+        rb.linearVelocity = currentVelocity.normalized * movement_speed;
+
+        if (gameObject.name == "Keese")
+        {
+            Debug.Log("regular: " + currentVelocity);
+            Debug.Log("normalized: " + currentVelocity.normalized);
+            Debug.Log("velocity: " + rb.linearVelocity);
+        }
     }
     
     private void ApplyGridSnap()
     {
         Vector3 currentVelocity = rb.linearVelocity;
         Vector3 currentPos = rb.position;
+        float alignFactor = 0.5f;
+
+        if (gameObject.name == "Gel")
+        {
+            alignFactor = 1f;
+        }
 
         if (currentVelocity.x != 0)
         {
-            currentPos.y = Mathf.Lerp(currentPos.y, AlignToGridPosition(currentPos.y, 0.5f), Time.deltaTime * movement_speed);
+            currentPos.y = Mathf.Lerp(currentPos.y, AlignToGridPosition(currentPos.y, alignFactor), Time.deltaTime * movement_speed);
         }
         else if (currentVelocity.y != 0)
         {
-            currentPos.x = Mathf.Lerp(currentPos.x, AlignToGridPosition(currentPos.x, 0.5f), Time.deltaTime * movement_speed);
+            currentPos.x = Mathf.Lerp(currentPos.x, AlignToGridPosition(currentPos.x, alignFactor), Time.deltaTime * movement_speed);
         }
 
         rb.MovePosition(currentPos);
@@ -131,15 +197,19 @@ public class EnemyMovement : MonoBehaviour
         // If an Enemy collides with anything, try to change directions (to maintain movement)
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
         {
+            if (gameObject.name == "Keese")
+            {
+                Debug.Log("collided");
+            }
             if (Time.time >= timeCollisionDirectionChange + lastCollisionDirectionChangeTime)
             {
-                int newDirection;
                 do
                 {
-                    newDirection = Random.Range(0, 4);
-                } while (newDirection == currentDirection);
+                    ChangeDirection();
+                } while (rb.linearVelocity == currentDirection);
+                currentDirection = rb.linearVelocity;
 
-                ChangeDirection(newDirection);
+                ChangeDirection();
                 lastCollisionDirectionChangeTime = Time.time;
             }
         }

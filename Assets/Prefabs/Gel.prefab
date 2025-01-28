@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3442894356511509799}
   - component: {fileID: 5420192278874177632}
   - component: {fileID: 1673509646348394013}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gel
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -208,3 +208,5 @@ MonoBehaviour:
   movement_speed: 2
   directionChangeRate: 2
   spriteChangeRate: 0.15
+  timeCollisionDirectionChange: 1
+  movingSprite: {fileID: 4090162, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
