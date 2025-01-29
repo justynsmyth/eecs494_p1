@@ -29,29 +29,33 @@ public class ChangeHealthOnTouch : MonoBehaviour
     {
         Collider selfCollider = GetComponent<Collider>();
         // if Player is collided with and in god mode, do nothing
-        if (other.gameObject.CompareTag("Player")) 
+        if (other.gameObject.CompareTag("Player"))
         {
-            if (GameManager.god_mode || player_iframes)
+            HasHealth playerHealth = other.gameObject.GetComponent<HasHealth>();
+            if (GameManager.god_mode || playerHealth.player_iframes)
             {
                 return;
             }
-            PlayerInput playerInput = other.gameObject.GetComponent<PlayerInput>();
-            SpriteRenderer playerSprite = other.gameObject.GetComponent<SpriteRenderer>();
-            // ! May need to do a null check here
-            StartCoroutine(PlayerHit(playerInput, playerSprite));
+
+            // TODO: May need to do a null check here
+            playerHealth.PlayerHit();
             HandleHealthAndKnockback(selfCollider, other, healthInflictOnTouch);
-        } else if (other.gameObject.CompareTag("Weapon")) 
+        }
+        else if (other.gameObject.CompareTag("Weapon") && gameObject.CompareTag("Enemy"))
+        {
+            HasHealth enemyHealth = gameObject.GetComponent<HasHealth>();
+            if (enemyHealth.IsInvulnerable) return;
+            GetComponent<EnemyMovement>().stopMovement = false; // if player hits, enemy regains control (if stunned)
+            StartCoroutine(enemyHealth.InvulnerabilityCooldown());
+            HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
+        }
+        else if (other.gameObject.CompareTag("bomb"))
         {
             if (IsInvulnerable) return;
-            GetComponent<EnemyMovement>().stopMovement = false; // if player hits, enemy regains control (if stunned)
-            StartCoroutine(InvulnerabilityCooldown()); 
-            HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
-        } else if (other.gameObject.CompareTag("bomb"))
-        {
-             if (IsInvulnerable) return;
-             StartCoroutine(InvulnerabilityCooldown());
-             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch * 2);
-        } else if (other.gameObject.CompareTag("boomerang"))
+            StartCoroutine(InvulnerabilityCooldown());
+            HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch * 2);
+        }
+        else if (other.gameObject.CompareTag("boomerang"))
         {
             if (IsInvulnerable) return;
             if (ignoreBoomerang)
@@ -68,13 +72,14 @@ public class ChangeHealthOnTouch : MonoBehaviour
 
         /* Destroy self */
         if (destroy_self_on_touch)
+        {
             Destroy(gameObject);
+        }
     }
 
     private IEnumerator InvulnerabilityCooldown()
     {
         IsInvulnerable = true;
-        
         StartCoroutine(EnemyHitFlash(sr));
         yield return new WaitForSeconds(invulnerability_duration);
         IsInvulnerable = false;

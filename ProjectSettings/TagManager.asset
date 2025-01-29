@@ -10,6 +10,7 @@ TagManager:
   - Weapon
   - key
   - bow
+  - Enemy Attack
   - bomb
   - boomerang
   layers:
@@ -26,8 +27,8 @@ TagManager:
   - Doorway
   - Effect
   - FlyingEnemy
-  - 
-  - 
+  - Trap
+  - EnemyAttack
   - 
   - 
   - 

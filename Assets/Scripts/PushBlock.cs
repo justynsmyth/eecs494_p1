@@ -9,8 +9,7 @@ public enum PushType
 public class PushBlock : MonoBehaviour
 {
     private Rigidbody2D rb;
-    public Vector3 transformDirection;
-    public float playerPushDirection = 1.0f;
+    public float transformMagnitude = 1f;
 
     public PushType pushType;
     public float moveDuration = 0.05f;
@@ -38,13 +37,13 @@ public class PushBlock : MonoBehaviour
         if (isPushed) return;
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (Input.GetAxisRaw(pushType.ToString()) == playerPushDirection && !isMoving)
+            if (Input.GetAxisRaw(pushType.ToString()) != 0 && !isMoving)
             {
                 holdTime += Time.deltaTime;
 
-                if (holdTime >= moveDuration)
+                if (holdTime >= moveDuration && transform.position == startPosition)
                 {
-                    StartCoroutine(MoveBlock());
+                    StartCoroutine(MoveBlock(Input.GetAxisRaw(pushType.ToString())));
                 }
             }
             else
@@ -54,12 +53,21 @@ public class PushBlock : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveBlock()
+    private IEnumerator MoveBlock(float direction)
     {
         isMoving = true;
         PlayerInput.IsActionInProgress = true;
         Vector3 origin = transform.position;
-        Vector3 dest = origin + transformDirection;
+        Vector3 dest = origin;
+
+        if (pushType.ToString() == "Horizontal")
+        {
+            dest.x = dest.x + (direction * transformMagnitude);
+        }
+        else
+        {
+            dest.y = dest.y + (direction * transformMagnitude);
+        }
 
         float time = 0.0f;
         while (time < moveDuration)

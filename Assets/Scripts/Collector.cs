@@ -1,3 +1,6 @@
+using System.Collections;
+using System.ComponentModel;
+using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 
 public class Collector : MonoBehaviour
@@ -5,6 +8,10 @@ public class Collector : MonoBehaviour
     public AudioClip rupee_collection_sound_clip;
     public AudioClip heart_collection_sound_clip;
     public AudioClip key_collection_sound_clip;
+    public AudioClip weapon_collection_sound_clip;
+
+    public Sprite weaponPickupSprite;
+    public float animationTime = 2f;
 
     Inventory inventory;
     HasHealth healthBar;
@@ -67,9 +74,11 @@ public class Collector : MonoBehaviour
         {
             inventory.UpdateZSlotItem("Bow"); 
 
+            AudioSource.PlayClipAtPoint(weapon_collection_sound_clip, Camera.main.transform.position);
+
             Destroy(object_collided_with);
 
-            // play sound effect and animation
+            //StartCoroutine(WeaponPickup(GetComponent<SpriteRenderer>(), object_collided_with));
         }
         else if (object_collided_with.tag == "bomb")
         {
@@ -103,4 +112,30 @@ public class Collector : MonoBehaviour
             // play sound effect and animation
         }
     }
+
+    /*
+    IEnumerator WeaponPickup(SpriteRenderer playerSprite, GameObject item)
+    {
+        float timeElapsed = 0f;
+        
+        Sprite currentSprite = playerSprite.sprite;
+        playerSprite.sprite = weaponPickupSprite;
+
+        PlayerInput playerControl = GetComponent<PlayerInput>();
+        playerControl.control = false;
+
+        item.transform.position += Vector3.up * 1;
+
+        while (timeElapsed < animationTime)
+        {
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        playerSprite.sprite = currentSprite;
+        playerControl.control = true;
+
+        Destroy(item);
+    }
+    */
 }

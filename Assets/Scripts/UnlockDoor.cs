@@ -4,6 +4,7 @@ public class UnlockDoor : MonoBehaviour
 {
     public GameObject openDoor;
     public Sprite openDoorSprite;
+    public AudioClip openDoorSound;
 
     public bool verticalDoor;
     public GameObject otherDoor;
@@ -53,6 +54,8 @@ public class UnlockDoor : MonoBehaviour
                 Destroy(gameObject.GetComponent<BoxCollider>());
 
                 locked = false;
+
+                AudioSource.PlayClipAtPoint(openDoorSound, Camera.main.transform.position);
             }
         }
     }

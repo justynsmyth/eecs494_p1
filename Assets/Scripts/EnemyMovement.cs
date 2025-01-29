@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,7 +23,7 @@ public class EnemyMovement : MonoBehaviour
     private SpriteRenderer enemySprite;
     private Sprite defaultSprite;
 
-    private ChangeHealthOnTouch changeHealthOnTouch;
+    private HasHealth hasHealth;
     private Vector3 currentDirection;
 
     private bool gelPause;
@@ -32,7 +31,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        changeHealthOnTouch = GetComponent<ChangeHealthOnTouch>();
+        hasHealth = GetComponent<HasHealth>();
         enemySprite = GetComponent<SpriteRenderer>();
         defaultSprite = GetComponent<SpriteRenderer>().sprite;
 
@@ -63,7 +62,7 @@ public class EnemyMovement : MonoBehaviour
             timeSinceAnimation = 0;
         }
 
-        if (changeHealthOnTouch.IsInvulnerable)
+        if (hasHealth.IsInvulnerable)
         {
             return;
         }
@@ -162,7 +161,11 @@ public class EnemyMovement : MonoBehaviour
         float xValue = Random.Range(-1f, 1f);
         float yValue = Random.Range(-1f, 1f);
 
-        if (gameObject.name != "Keese")
+        if (gameObject.name == "Aquamentus")
+        {
+            yValue = 0f;
+        }
+        else if (gameObject.name != "Keese")
         {
             int horizontal = Random.Range(0, 2);
 
@@ -179,6 +182,7 @@ public class EnemyMovement : MonoBehaviour
         currentVelocity.x = xValue;
         currentVelocity.y = yValue;
 
+        // TODO: Keese 2D vector movement not being normalized correctly
         rb.linearVelocity = currentVelocity.normalized * movement_speed;
     }
 
