@@ -176,6 +176,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 2
+  itemDropRate: 0.4
+  room: {fileID: 0}
+  damageAudio: {fileID: 8300000, guid: 2570c7a86d14030469e2898b5a81738c, type: 3}
+  invulnerability_duration: 1
+  IsInvulnerable: 0
+  player_iframes: 0
 --- !u!114 &2765040916452782090
 MonoBehaviour:
   m_ObjectHideFlags: 0

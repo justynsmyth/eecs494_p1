@@ -176,6 +176,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 6
+  itemDropRate: 0.4
+  room: {fileID: 0}
+  damageAudio: {fileID: 8300000, guid: 2570c7a86d14030469e2898b5a81738c, type: 3}
+  invulnerability_duration: 1
+  IsInvulnerable: 0
+  player_iframes: 0
 --- !u!114 &7540376866204916702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,6 +199,8 @@ MonoBehaviour:
   knockback_power: 3.5
   destroy_self_on_touch: 0
   invulnerability_duration: 1.5
+  ignoreBoomerang: 0
+  stunDuration: 3
   IsInvulnerable: 0
 --- !u!114 &418059363063081750
 MonoBehaviour:
@@ -211,6 +219,11 @@ MonoBehaviour:
   spriteChangeRate: 0.15
   timeCollisionDirectionChange: 1
   movingSprite: {fileID: 958717527, guid: 0d5a12ace9a72c5439552031d039ac7b, type: 3}
+  sideSprite: {fileID: 0}
+  sideSprite2: {fileID: 0}
+  upSprite: {fileID: 0}
+  downSprite: {fileID: 0}
+  stopMovement: 0
 --- !u!114 &6371132916530529817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,3 +240,4 @@ MonoBehaviour:
   projectileSpeed: 3
   projectile: {fileID: 0}
   player: {fileID: 0}
+  projectileSpread: 5
