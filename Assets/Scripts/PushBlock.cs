@@ -14,6 +14,7 @@ public class PushBlock : MonoBehaviour
     public PushType pushType;
     public float moveDuration = 0.05f;
     
+    public AudioClip pushAudio;
 
     private bool isMoving = false;
     private bool isPushed = false;
@@ -43,6 +44,7 @@ public class PushBlock : MonoBehaviour
 
                 if (holdTime >= moveDuration && transform.position == startPosition)
                 {
+                    AudioSource.PlayClipAtPoint(pushAudio, Camera.main.transform.position);
                     StartCoroutine(MoveBlock(Input.GetAxisRaw(pushType.ToString())));
                 }
             }
