@@ -79,8 +79,8 @@ public class GameManager : MonoBehaviour
             god_mode = true;
             inventory.MaximizeResources();
             player_health.MaximizeHealth();
-            Inventory.HasSword = true;
-            Inventory.HasBow = true;
+            inventory.UpdateXSlotItem("Sword");
+            inventory.UpdateZSlotItem("Bow");
         }
         else
         {

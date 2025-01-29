@@ -10,6 +10,8 @@ TagManager:
   - Weapon
   - key
   - bow
+  - bomb
+  - boomerang
   layers:
   - Default
   - TransparentFX

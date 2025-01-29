@@ -10,6 +10,8 @@ public class ChangeHealthOnTouch : MonoBehaviour
     public float knockback_power;
     public bool destroy_self_on_touch = false;
     public float invulnerability_duration = 1.0f;
+    public bool ignoreBoomerang = false;
+    public float stunDuration = 3f;
 
     private bool player_iframes = false;
     private float playerControlLossTime = 0.25f;
@@ -38,12 +40,30 @@ public class ChangeHealthOnTouch : MonoBehaviour
             // ! May need to do a null check here
             StartCoroutine(PlayerHit(playerInput, playerSprite));
             HandleHealthAndKnockback(selfCollider, other, healthInflictOnTouch);
-        } else if (other.gameObject.CompareTag("Weapon"))
+        } else if (other.gameObject.CompareTag("Weapon")) 
         {
             if (IsInvulnerable) return;
+            GetComponent<EnemyMovement>().stopMovement = false; // if player hits, enemy regains control (if stunned)
             StartCoroutine(InvulnerabilityCooldown()); 
             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
-
+        } else if (other.gameObject.CompareTag("bomb"))
+        {
+             if (IsInvulnerable) return;
+             StartCoroutine(InvulnerabilityCooldown());
+             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch * 2);
+        } else if (other.gameObject.CompareTag("boomerang"))
+        {
+            if (IsInvulnerable) return;
+            if (ignoreBoomerang)
+            {
+                // stun effect
+                StartCoroutine(StunCooldown());
+            }
+            else
+            {
+                StartCoroutine(InvulnerabilityCooldown());
+                HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
+            }
         }
 
         /* Destroy self */
@@ -54,6 +74,7 @@ public class ChangeHealthOnTouch : MonoBehaviour
     private IEnumerator InvulnerabilityCooldown()
     {
         IsInvulnerable = true;
+        
         StartCoroutine(EnemyHitFlash(sr));
         yield return new WaitForSeconds(invulnerability_duration);
         IsInvulnerable = false;
@@ -130,5 +151,14 @@ public class ChangeHealthOnTouch : MonoBehaviour
             yield return null;
         }
         enemySprite.color = Color.white; // Reset color after flashing
+    }
+
+    private IEnumerator StunCooldown()
+    {
+        EnemyMovement em = GetComponent<EnemyMovement>();
+        em.stopMovement = true;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        yield return new WaitForSeconds(stunDuration);
+        em.stopMovement = false;
     }
 }

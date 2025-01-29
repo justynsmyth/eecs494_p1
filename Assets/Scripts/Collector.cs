@@ -65,10 +65,41 @@ public class Collector : MonoBehaviour
         }
         else if (object_collided_with.tag == "bow")
         {
-            Inventory.HasBow = true;
+            inventory.UpdateZSlotItem("Bow"); 
 
             Destroy(object_collided_with);
 
+            // play sound effect and animation
+        }
+        else if (object_collided_with.tag == "bomb")
+        {
+            if (inventory)
+            {
+                inventory.AddBomb(1);
+                inventory.UpdateZSlotItem("Bomb");
+            }
+            
+            Bomb b = object_collided_with.GetComponent<Bomb>();
+
+            if (b != null && b.isDrop)
+            {
+                Destroy(object_collided_with);
+            }
+
+            // play sound effect and animation
+        } else if (object_collided_with.tag == "boomerang")
+        {
+            if (inventory)
+            {
+                inventory.UpdateZSlotItem("Boomerang");
+            }
+            
+            Boomerang b = object_collided_with.GetComponent<Boomerang>();
+
+            if (b != null && b.isDrop)
+            {
+                Destroy(object_collided_with);
+            }
             // play sound effect and animation
         }
     }

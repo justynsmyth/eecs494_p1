@@ -2,33 +2,43 @@ using UnityEngine;
 
 public class Boomerang : Weapons
 {
-     public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown)
+    public GameObject prefab { get; set; }
+    public bool isDrop = true;
+    private GameObject _owner;
+    public void Setup(GameObject boomPrefab, float cooldown, GameObject owner)
+    {
+        prefab = boomPrefab; 
+        Cooldown = cooldown;
+        IsOnCooldown = false;
+        _owner = owner;
+    }
+
+    public override void HandleAnimation(InputToAnimator animator)
+    {
+        animator.HandleBowAnimation();
+    }
+
+    public override void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction)
+    {
+        if (!IsOnCooldown)
         {
-            Prefab_Up = up;
-            Prefab_Down = down;
-            Prefab_Left = left;
-            Prefab_Right = right;
-            Cooldown = cooldown;
-            IsOnCooldown = false;
-        }
-    
-        public override void HandleAnimation(InputToAnimator animator)
-        {
-           animator.HandleSwordAnimation(); 
-        }
-    
-        public override void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction)
-        {
-            if (GameManager.instance.player_health.HasMaxHealth() && !IsOnCooldown)
+            Cooldown_Left = Time.time + Cooldown;
+            GameObject b = Instantiate(prefab, position, rotation);
+            b.GetComponent<Boomerang>().isDrop = false;
+            BoomerangProjectile projectile = b.GetComponent<BoomerangProjectile>();
+
+            if (projectile != null)
             {
-                Cooldown_Left = Time.time + Cooldown;
-                GameObject prefabToInstantiate = SelectPrefabByDirection(direction);
-                Instantiate(prefabToInstantiate, position, rotation);
-                IsOnCooldown = true;
+                projectile.Setup(_owner);
+                projectile.OnReturn += HandleReturn;
             }
-            else if (Time.time >= Cooldown_Left)
-            {
-               IsOnCooldown = false; 
-            }
+
+            IsOnCooldown = true;
         }
+    }
+
+    private void HandleReturn()
+    {
+        IsOnCooldown = false;
+    }
 }

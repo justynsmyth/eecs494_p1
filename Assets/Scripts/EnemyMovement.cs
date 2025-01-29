@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,8 +8,15 @@ public class EnemyMovement : MonoBehaviour
     public float directionChangeRate = 2f;
     public float spriteChangeRate = 0.15f;
     public float timeCollisionDirectionChange = 1f;
+    
     public Sprite movingSprite;
-
+    public Sprite sideSprite;
+    public Sprite sideSprite2;
+    public Sprite upSprite;
+    public Sprite downSprite;
+    private bool directionSprites = false;
+    
+    public bool stopMovement = false;
 
     private Rigidbody rb;
     private float timeSinceDirectionChange;
@@ -21,7 +29,6 @@ public class EnemyMovement : MonoBehaviour
 
     private bool gelPause;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -31,16 +38,21 @@ public class EnemyMovement : MonoBehaviour
 
         ChangeDirection();
         currentDirection = rb.linearVelocity;
-
         directionChangeRate = Random.Range(0f, 3f);
         timeSinceDirectionChange = 0;
 
         gelPause = false;
+
+        if (sideSprite != null && upSprite != null && downSprite != null && sideSprite != null)
+        {
+            directionSprites = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (stopMovement) return;
         timeSinceDirectionChange += Time.deltaTime;
         timeSinceAnimation += Time.deltaTime;
 
@@ -88,13 +100,37 @@ public class EnemyMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (stopMovement) return;
         ApplyGridSnap(); // need to call at FixedTick so GridSnap can adjust Enemy's location each FixedFrame.
     }
 
     // If the enemy has a sprite when animated, it will alternate between that sprite and its default sprite. Otherwise, it will flip sprite direction
     void AnimateSprite()
     {
-        if (movingSprite != null)
+        if (directionSprites)
+        {
+            if (rb.linearVelocity.x > 0)
+            {
+                enemySprite.sprite = enemySprite.sprite == sideSprite ? sideSprite2 : sideSprite;
+                enemySprite.flipX = false;
+            }
+            else if (rb.linearVelocity.x < 0)
+            {
+                enemySprite.sprite = enemySprite.sprite == sideSprite ? sideSprite2 : sideSprite; 
+                enemySprite.flipX = true;
+            }
+            else if (rb.linearVelocity.y > 0) 
+            {
+                enemySprite.sprite = upSprite;
+                enemySprite.flipX = enemySprite.flipX ? false : true;
+            }
+            else if (rb.linearVelocity.y < 0)
+            {
+                enemySprite.sprite = downSprite;
+                enemySprite.flipX = enemySprite.flipX ? false : true;
+            }
+        }
+        else if (movingSprite != null)
         {
             if (enemySprite.sprite == defaultSprite)
             {
@@ -144,13 +180,6 @@ public class EnemyMovement : MonoBehaviour
         currentVelocity.y = yValue;
 
         rb.linearVelocity = currentVelocity.normalized * movement_speed;
-
-        if (gameObject.name == "Keese")
-        {
-            Debug.Log("regular: " + currentVelocity);
-            Debug.Log("normalized: " + currentVelocity.normalized);
-            Debug.Log("velocity: " + rb.linearVelocity);
-        }
     }
 
     private void ApplyGridSnap()
@@ -194,10 +223,7 @@ public class EnemyMovement : MonoBehaviour
         // If an Enemy collides with anything, try to change directions (to maintain movement)
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
         {
-            if (gameObject.name == "Keese")
-            {
-                Debug.Log("collided");
-            }
+            if (stopMovement) return;
             if (Time.time >= timeCollisionDirectionChange + lastCollisionDirectionChangeTime)
             {
                 do
@@ -210,5 +236,9 @@ public class EnemyMovement : MonoBehaviour
                 lastCollisionDirectionChangeTime = Time.time;
             }
         }
+    }
+    public SpriteRenderer GetSprite()
+    {
+        return enemySprite;
     }
 }

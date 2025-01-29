@@ -1,11 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 public class Inventory : MonoBehaviour
 {
     int rupee_count = 0;
     int key_count = 0;
+    int bomb_count = 0;
 
     int max_inventory_value = 999;
 
@@ -19,6 +21,10 @@ public class Inventory : MonoBehaviour
     public GameObject ArrowProjectilePrefab_Up;
     public GameObject ArrowProjectilePrefab_Down;
 
+    public GameObject BoomerangPrefab;
+
+    public GameObject BombPrefab;
+
     private InputToAnimator playerAnimator;
     private Rigidbody rb;
 
@@ -27,19 +33,29 @@ public class Inventory : MonoBehaviour
     public GameObject WeaponPrefab;
 
     private Dictionary<string, Weapons> weapons;
+    
+    
+    // When adding Weapons, Instantiate their component here
+    // Then add them to the weapons dictionary
     void Start()
     {
         playerAnimator = GetComponent<InputToAnimator>();
         Sword sword = Instantiate(WeaponPrefab).GetComponent<Sword>();
         Bow bow = Instantiate(WeaponPrefab).GetComponent<Bow>();
+        Boomerang boomerang = Instantiate(WeaponPrefab).GetComponent<Boomerang>();
+        Bomb bomb = Instantiate(WeaponPrefab).GetComponent<Bomb>();
 
         sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, ProjectileCooldown);
         bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, this);
+        boomerang.Setup(BoomerangPrefab, ProjectileCooldown * 1.5f, gameObject); // boomerang needs longer to cooldown
+        bomb.Setup(BombPrefab, ProjectileCooldown);
         
         weapons = new Dictionary<string, Weapons>
         {
             { "Sword", sword },
-            { "Bow",   bow }
+            { "Bow",   bow },
+            { "Bomb", bomb},
+            { "Boomerang", boomerang }
         }; 
     }
 
@@ -59,10 +75,19 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void AddBomb(int num_bombs)
+    {
+        if (!GameManager.god_mode && bomb_count + num_bombs <= max_inventory_value)
+        {
+            bomb_count += num_bombs;
+        }
+    }
+
     public void MaximizeResources()
     {
         rupee_count = max_inventory_value;
         key_count = max_inventory_value;
+        bomb_count = max_inventory_value;
     }
 
     public int GetRupees()
@@ -74,22 +99,41 @@ public class Inventory : MonoBehaviour
     {
         return key_count;
     }
-
-    public static bool HasSword = true;
-    public static bool HasBow = false;
+    
+    // Used to identify the Z Slot. Update this to include more Z slot items
+    private string currentZSlotItem = "Bow";
+    private readonly HashSet<string> zSlotItems = new HashSet<string> { "Bow", "Bomb", "Boomerang" };
+    
+    private string currentXSlotItem = "Sword";
+    private readonly HashSet<string> xSlotItems = new HashSet<string> { "Sword" };
+    
+    public void UpdateZSlotItem(string newItem)
+    {
+        if (!zSlotItems.Contains(newItem)) return;
+        currentZSlotItem = newItem;
+        Debug.Log($"Z-slot updated to: {currentZSlotItem}");
+    }
+    public void UpdateXSlotItem(string newItem)
+    {
+        if (!xSlotItems.Contains(newItem)) return;
+        currentXSlotItem = newItem;
+        Debug.Log($"X-slot updated to: {currentXSlotItem}");
+    }
+    public string GetCurrentZSlotItem() { return currentZSlotItem; }
+    public string GetCurrentXSlotItem() { return currentXSlotItem; }
     
     private Coroutine currentCoroutine;
     
     void OnEnable()
     {
-        PlayerInput.OnXPressed += () => UseWeapon("Sword");
-        PlayerInput.OnZPressed += () => UseWeapon("Bow");
+        PlayerInput.OnXPressed += () => UseWeapon(currentXSlotItem);
+        PlayerInput.OnZPressed += () => UseWeapon(currentZSlotItem);
     }
 
     void OnDisable()
     {
-        PlayerInput.OnXPressed -= () => UseWeapon("Sword");
-        PlayerInput.OnZPressed -= () => UseWeapon("Bow");
+        PlayerInput.OnXPressed -= () => UseWeapon(currentXSlotItem);
+        PlayerInput.OnZPressed -= () => UseWeapon(currentZSlotItem);
     }
     
     private void UseWeapon(string weaponName)

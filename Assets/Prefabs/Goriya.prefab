@@ -16,8 +16,9 @@ GameObject:
   - component: {fileID: 1909051889503590453}
   - component: {fileID: 2765040916452782090}
   - component: {fileID: 2775540893218910377}
+  - component: {fileID: 3416076624536906829}
   m_Layer: 8
-  m_Name: Stalfos
+  m_Name: Goriya
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 2137198875, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
+  m_Sprite: {fileID: 113590106, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -212,4 +213,24 @@ MonoBehaviour:
   spriteChangeRate: 0.15
   timeCollisionDirectionChange: 1
   movingSprite: {fileID: 0}
+  sideSprite: {fileID: -404781670, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
+  sideSprite2: {fileID: -1863948249, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
+  upSprite: {fileID: 1630712848, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
+  downSprite: {fileID: 113590106, guid: 0d9044cc5487fb74485bc0015eb31547, type: 3}
   stopMovement: 0
+--- !u!114 &3416076624536906829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466887526066340209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfebf7cb4f875a64cbd4048dd819ea81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boomerangWeapon: {fileID: 5702128966828368771, guid: f16c0bd2452c20a4984887337a717335, type: 3}
+  boomerangPrefab: {fileID: 3016951779720001868, guid: f16c0bd2452c20a4984887337a717335, type: 3}
+  throwInterval: 2
+  boomerangCooldown: 1

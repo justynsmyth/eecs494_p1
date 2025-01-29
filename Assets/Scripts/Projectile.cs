@@ -6,15 +6,15 @@ public class Projectile : MonoBehaviour
     public float projectileSpeed = 10f;
     public Vector2 projectileDirection = Vector2.right;
     public float projectileLifeTime = 1f;
-    private Rigidbody rb;
+    protected Rigidbody rb;
     
-    void Start()
+    protected virtual void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.linearVelocity = projectileDirection * projectileSpeed;
     }
 
-    void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("heart") || collision.collider.CompareTag("rupee"))
         {
@@ -22,7 +22,6 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            Debug.Log(collision.collider.name);
             TriggerExplosion(projectileLifeTime);
             HideProjectile();
             Destroy(gameObject, projectileLifeTime + 0.1f);
@@ -46,7 +45,7 @@ public class Projectile : MonoBehaviour
 
     protected virtual void TriggerExplosion(float lifeTime)
     {
-        
+       // implemented in inherited classes 
     }
    
 }

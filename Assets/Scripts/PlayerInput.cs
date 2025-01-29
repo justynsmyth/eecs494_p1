@@ -19,6 +19,7 @@ public class PlayerInput  : MonoBehaviour
     public static event Action OnSpacePressed;
     public static event Action OnXPressed;
     public static event Action OnZPressed;
+    public static event Action OnBPressed;
     
     void Update()
     {
@@ -97,7 +98,6 @@ public class PlayerInput  : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             OnSpacePressed?.Invoke();
-            Debug.Log("Space Key Pressed");
         }
 
         if (Input.GetKeyDown(KeyCode.X))
@@ -108,6 +108,11 @@ public class PlayerInput  : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             OnZPressed?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            OnXPressed?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
