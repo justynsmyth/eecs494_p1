@@ -9,12 +9,6 @@ public class ChangeHealthOnTouch : MonoBehaviour
     public float healthDamagedOnTouch = -1f;
     public float knockback_power;
     public bool destroy_self_on_touch = false;
-    public float invulnerability_duration = 1.0f;
-
-    private bool player_iframes = false;
-    private float playerControlLossTime = 0.25f;
-
-    public bool IsInvulnerable = false;
 
     private SpriteRenderer sr;
 
@@ -29,19 +23,19 @@ public class ChangeHealthOnTouch : MonoBehaviour
         // if Player is collided with and in god mode, do nothing
         if (other.gameObject.CompareTag("Player")) 
         {
-            if (GameManager.god_mode || player_iframes)
+            HasHealth playerHealth = other.gameObject.GetComponent<HasHealth>();
+            if (GameManager.god_mode || playerHealth.player_iframes)
             {
                 return;
             }
-            PlayerInput playerInput = other.gameObject.GetComponent<PlayerInput>();
-            SpriteRenderer playerSprite = other.gameObject.GetComponent<SpriteRenderer>();
-            // ! May need to do a null check here
-            StartCoroutine(PlayerHit(playerInput, playerSprite));
+            // TODO: May need to do a null check here
+            playerHealth.PlayerHit();
             HandleHealthAndKnockback(selfCollider, other, healthInflictOnTouch);
         } else if (other.gameObject.CompareTag("Weapon") && gameObject.CompareTag("Enemy"))
         {
-            if (IsInvulnerable) return;
-            StartCoroutine(InvulnerabilityCooldown()); 
+            HasHealth enemyHealth = gameObject.GetComponent<HasHealth>();
+            if (enemyHealth.IsInvulnerable) return;
+            StartCoroutine(enemyHealth.InvulnerabilityCooldown()); 
             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
         }
 
@@ -49,16 +43,7 @@ public class ChangeHealthOnTouch : MonoBehaviour
         if (destroy_self_on_touch)
         {
             Destroy(gameObject);
-            Debug.Log(gameObject.name + " destroyed by " + other.gameObject.name);
         }
-    }
-
-    private IEnumerator InvulnerabilityCooldown()
-    {
-        IsInvulnerable = true;
-        StartCoroutine(EnemyHitFlash(sr));
-        yield return new WaitForSeconds(invulnerability_duration);
-        IsInvulnerable = false;
     }
 
     private void HandleHealthAndKnockback(Collider attacker, Collider target, float damage)
@@ -85,52 +70,4 @@ public class ChangeHealthOnTouch : MonoBehaviour
             target_rb.linearVelocity= knockback_direction * knockback_power;
         }
     } 
-
-    IEnumerator PlayerHit(PlayerInput player, SpriteRenderer currentSprite)
-    {
-        float timeElapsed = 0f;
-        player_iframes = true;
-        player.control = false;
-        currentSprite.color = Color.red;
-
-        while (timeElapsed < invulnerability_duration)
-        {
-            if (timeElapsed > playerControlLossTime)
-            {
-                player.control = true;
-                currentSprite.color = Color.white;
-            }
-
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        player_iframes = false;
-        player.control = true;
-        currentSprite.color = Color.white;
-    }
-    
-    private IEnumerator EnemyHitFlash(SpriteRenderer enemySprite)
-    {
-        float timeElapsed = 0f;
-        while (timeElapsed < invulnerability_duration)
-        {
-            if (enemySprite.color == Color.red)
-            {
-                enemySprite.color = Color.blue;
-            }
-            else if (enemySprite.color == Color.blue)
-            {
-                enemySprite.color = Color.white;
-            }
-            else
-            {
-                enemySprite.color = Color.red;
-            }
-
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-        enemySprite.color = Color.white; // Reset color after flashing
-    }
 }

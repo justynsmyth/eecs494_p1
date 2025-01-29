@@ -22,7 +22,6 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            Debug.Log(collision.collider.name);
             TriggerExplosion(projectileLifeTime);
             HideProjectile();
             Destroy(gameObject, projectileLifeTime + 0.1f);

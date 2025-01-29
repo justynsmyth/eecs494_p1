@@ -16,7 +16,7 @@ public class EnemyMovement : MonoBehaviour
     private SpriteRenderer enemySprite;
     private Sprite defaultSprite;
 
-    private ChangeHealthOnTouch changeHealthOnTouch;
+    private HasHealth hasHealth;
     private Vector3 currentDirection;
 
     private bool gelPause;
@@ -25,7 +25,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        changeHealthOnTouch = GetComponent<ChangeHealthOnTouch>();
+        hasHealth = GetComponent<HasHealth>();
         enemySprite = GetComponent<SpriteRenderer>();
         defaultSprite = GetComponent<SpriteRenderer>().sprite;
 
@@ -51,7 +51,7 @@ public class EnemyMovement : MonoBehaviour
             timeSinceAnimation = 0;
         }
 
-        if (changeHealthOnTouch.IsInvulnerable)
+        if (hasHealth.IsInvulnerable)
         {
             return;
         }

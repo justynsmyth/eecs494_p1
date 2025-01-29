@@ -139,7 +139,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.9375, y: 1, z: 0.2}
+  m_Size: {x: 0.9375, y: 0.75, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &6544251145518117527
 BoxCollider:
@@ -175,6 +175,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 1
+  itemDropRate: 0.4
+  invulnerability_duration: 1
+  IsInvulnerable: 0
+  player_iframes: 0
 --- !u!114 &4638648181734867751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,8 +195,6 @@ MonoBehaviour:
   healthDamagedOnTouch: -1
   knockback_power: 3.5
   destroy_self_on_touch: 0
-  invulnerability_duration: 1.5
-  IsInvulnerable: 0
 --- !u!114 &3769873904254513399
 MonoBehaviour:
   m_ObjectHideFlags: 0
