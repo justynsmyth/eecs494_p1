@@ -155,6 +155,7 @@ public class Inventory : MonoBehaviour
     
     private void UseWeapon(string weaponName)
     {
+        if (weaponName == "") return;
         if (currentCoroutine != null) return;
         currentCoroutine = StartCoroutine(HandleAttack(weaponName));
     }

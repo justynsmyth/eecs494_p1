@@ -1,6 +1,4 @@
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class TransitionPlayer : MonoBehaviour
 {

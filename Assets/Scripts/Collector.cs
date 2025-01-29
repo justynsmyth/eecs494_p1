@@ -1,6 +1,3 @@
-using System.Collections;
-using System.ComponentModel;
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 
 public class Collector : MonoBehaviour

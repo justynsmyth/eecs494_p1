@@ -924,11 +924,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: fdcb43d8-7614-4cb7-8cd3-674cb4fffe79
+  cloudProjectId: a831d401-0fa7-49db-ad8f-94d1782948a3
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: p1-zelda
-  organizationId: cafung
+  organizationId: bunryu1029
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

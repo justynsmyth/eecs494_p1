@@ -1,9 +1,5 @@
-using System;
-using UnityEditor.MPE;
 using UnityEngine; 
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
-
 public class Bomb : Weapons 
 {
     public GameObject prefab { get; set; }
