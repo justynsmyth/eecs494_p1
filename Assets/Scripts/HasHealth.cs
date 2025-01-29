@@ -10,6 +10,8 @@ public class HasHealth : MonoBehaviour
     public float itemDropRate = 0.4f;
     public RoomClear room;
 
+    public AudioClip damageAudio;
+
     public float invulnerability_duration = 1.0f;
     public bool IsInvulnerable = false;
     public bool player_iframes = false;
@@ -31,6 +33,11 @@ public class HasHealth : MonoBehaviour
         else
         {
             MaximizeHealth();
+        }
+
+        if (num_health < 0)
+        {
+            AudioSource.PlayClipAtPoint(damageAudio, Camera.main.transform.position);
         }
     }
 

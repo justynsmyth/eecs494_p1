@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class RoomClear : MonoBehaviour
 {
-    public Sprite lockedDoor;
+    public UnlockDoor lockedDoor;
 
     public Vector2 dropItem;
     public GameObject item;
+    public AudioClip itemDropAudio;
 
     private int enemyCount = 0;
     private GameObject room;
@@ -48,7 +49,13 @@ public class RoomClear : MonoBehaviour
     {
         if (item != null)
         {
+            AudioSource.PlayClipAtPoint(itemDropAudio, Camera.main.transform.position);
             Instantiate(item, dropItem, Quaternion.identity);
+        }
+
+        if (lockedDoor != null)
+        {
+            lockedDoor.DoorUnlock();
         }
     }
 }

@@ -110,11 +110,10 @@ public class Collector : MonoBehaviour
 
             if (b != null && b.isDrop)
             {
+                AudioSource.PlayClipAtPoint(weapon_collection_sound_clip, Camera.main.transform.position);
+                AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
                 Destroy(object_collided_with);
             }
-
-            AudioSource.PlayClipAtPoint(weapon_collection_sound_clip, Camera.main.transform.position);
-            AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
             // play sound effect and animation
         }
     }
