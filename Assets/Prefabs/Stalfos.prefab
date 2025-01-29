@@ -209,3 +209,4 @@ MonoBehaviour:
   directionChangeRate: 2
   spriteChangeRate: 0.15
   timeCollisionDirectionChange: 1
+  movingSprite: {fileID: 0}

@@ -10,6 +10,7 @@ TagManager:
   - Weapon
   - key
   - bow
+  - Enemy Attack
   layers:
   - Default
   - TransparentFX
@@ -24,8 +25,8 @@ TagManager:
   - Doorway
   - Effect
   - FlyingEnemy
-  - 
-  - 
+  - Trap
+  - EnemyAttack
   - 
   - 
   - 

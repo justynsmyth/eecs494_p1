@@ -38,17 +38,19 @@ public class ChangeHealthOnTouch : MonoBehaviour
             // ! May need to do a null check here
             StartCoroutine(PlayerHit(playerInput, playerSprite));
             HandleHealthAndKnockback(selfCollider, other, healthInflictOnTouch);
-        } else if (other.gameObject.CompareTag("Weapon"))
+        } else if (other.gameObject.CompareTag("Weapon") && gameObject.CompareTag("Enemy"))
         {
             if (IsInvulnerable) return;
             StartCoroutine(InvulnerabilityCooldown()); 
             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
-
         }
 
         /* Destroy self */
         if (destroy_self_on_touch)
+        {
             Destroy(gameObject);
+            Debug.Log(gameObject.name + " destroyed by " + other.gameObject.name);
+        }
     }
 
     private IEnumerator InvulnerabilityCooldown()

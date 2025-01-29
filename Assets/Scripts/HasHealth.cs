@@ -7,7 +7,7 @@ public class HasHealth : MonoBehaviour
     public float health;
     private float maxHealth;
 
-    private float itemDropRate = 1.0f;
+    public float itemDropRate = 0.4f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

@@ -5,6 +5,7 @@ public class Collector : MonoBehaviour
     public AudioClip rupee_collection_sound_clip;
     public AudioClip heart_collection_sound_clip;
     public AudioClip key_collection_sound_clip;
+    public AudioClip weapon_collection_sound_clip;
 
     Inventory inventory;
     HasHealth healthBar;
@@ -68,6 +69,8 @@ public class Collector : MonoBehaviour
             Inventory.HasBow = true;
 
             Destroy(object_collided_with);
+
+            AudioSource.PlayClipAtPoint(key_collection_sound_clip, Camera.main.transform.position);
 
             // play sound effect and animation
         }

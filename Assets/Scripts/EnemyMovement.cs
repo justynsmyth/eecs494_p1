@@ -126,7 +126,11 @@ public class EnemyMovement : MonoBehaviour
         float xValue = Random.Range(-1f, 1f);
         float yValue = Random.Range(-1f, 1f);
 
-        if (gameObject.name != "Keese")
+        if (gameObject.name == "Aquamentus")
+        {
+            yValue = 0f;
+        }
+        else if (gameObject.name != "Keese")
         {
             int horizontal = Random.Range(0, 2);
 
@@ -143,14 +147,8 @@ public class EnemyMovement : MonoBehaviour
         currentVelocity.x = xValue;
         currentVelocity.y = yValue;
 
+        // TODO: Keese 2D vector movement not being normalized correctly
         rb.linearVelocity = currentVelocity.normalized * movement_speed;
-
-        if (gameObject.name == "Keese")
-        {
-            Debug.Log("regular: " + currentVelocity);
-            Debug.Log("normalized: " + currentVelocity.normalized);
-            Debug.Log("velocity: " + rb.linearVelocity);
-        }
     }
 
     private void ApplyGridSnap()
@@ -194,10 +192,6 @@ public class EnemyMovement : MonoBehaviour
         // If an Enemy collides with anything, try to change directions (to maintain movement)
         if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
         {
-            if (gameObject.name == "Keese")
-            {
-                Debug.Log("collided");
-            }
             if (Time.time >= timeCollisionDirectionChange + lastCollisionDirectionChangeTime)
             {
                 do
