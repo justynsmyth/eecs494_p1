@@ -107,7 +107,7 @@ public class Inventory : MonoBehaviour
     }
     
     // Used to identify the Z Slot. Update this to include more Z slot items
-    private string currentZSlotItem = "Bow";
+    private string currentZSlotItem = "";
     private readonly HashSet<string> zSlotItems = new HashSet<string> { "Bow", "Bomb", "Boomerang" };
     
     private string currentXSlotItem = "Sword";
@@ -134,12 +134,23 @@ public class Inventory : MonoBehaviour
     {
         PlayerInput.OnXPressed += () => UseWeapon(currentXSlotItem);
         PlayerInput.OnZPressed += () => UseWeapon(currentZSlotItem);
+        PlayerInput.OnSpacePressed += SwapZSlotItem; 
     }
 
     void OnDisable()
     {
         PlayerInput.OnXPressed -= () => UseWeapon(currentXSlotItem);
         PlayerInput.OnZPressed -= () => UseWeapon(currentZSlotItem);
+        PlayerInput.OnSpacePressed -= SwapZSlotItem;
+    }
+    
+    private void SwapZSlotItem()
+    {
+        var zSlotArray = new List<string>(zSlotItems);
+        int currentIndex = zSlotArray.IndexOf(currentZSlotItem);
+        int nextIndex = (currentIndex + 1) % zSlotArray.Count;
+        currentZSlotItem = zSlotArray[nextIndex];
+        Debug.Log($"Z-slot item swapped to: {currentZSlotItem}");
     }
     
     private void UseWeapon(string weaponName)

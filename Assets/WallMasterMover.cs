@@ -17,7 +17,7 @@ public class WallMasterMover : MonoBehaviour
 
     public Sprite GrabSprite;
 
-    public Vector3 teleportCameraPos = new Vector3(40f, 7f, -10f);
+    public Vector3 teleportCameraPos = new Vector3(39.5f, 7f, -10f);
     public Vector3 teleportPlayerPos = new Vector3(40f, 2f, 0f);
 
 
