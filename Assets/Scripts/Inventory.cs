@@ -32,6 +32,12 @@ public class Inventory : MonoBehaviour
 
     public GameObject WeaponPrefab;
 
+    public AudioClip swordSound;
+    public AudioClip swordFullHPSound;
+    public AudioClip bowSound;
+    public AudioClip boomerangSound;
+    public AudioClip bombSound;
+
     private Dictionary<string, Weapons> weapons;
     
     
@@ -149,6 +155,28 @@ public class Inventory : MonoBehaviour
 
         RoomTransition.Direction direction = playerAnimator.GetPlayerDirection();
         weapons[weaponName].Attack(transform.position, Quaternion.identity, direction);
+        
+        // TODO: bugfix this later, rough implementation
+        if (weaponName == "Sword")
+        {
+            AudioSource.PlayClipAtPoint(swordSound, Camera.main.transform.position);
+            if (GetComponent<HasHealth>().GetHealth() == GetComponent<HasHealth>().GetMaxHealth())
+            {
+                AudioSource.PlayClipAtPoint(swordFullHPSound, Camera.main.transform.position);
+            }
+        }
+        else if (weaponName == "Bow")
+        {
+            AudioSource.PlayClipAtPoint(bowSound, Camera.main.transform.position);
+        }
+        else if (weaponName == "Boomerang")
+        {
+            AudioSource.PlayClipAtPoint(boomerangSound, Camera.main.transform.position);
+        }
+        else if (weaponName == "Bomb")
+        {
+            AudioSource.PlayClipAtPoint(bombSound, Camera.main.transform.position);
+        }
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
         PlayerInput.IsActionInProgress = false;

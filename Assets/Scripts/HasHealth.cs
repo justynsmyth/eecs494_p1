@@ -4,11 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class HasHealth : MonoBehaviour
 {
-
     public float health;
     private float maxHealth;
 
     public float itemDropRate = 0.4f;
+    public RoomClear room;
+
+    public AudioClip damageAudio;
 
     public float invulnerability_duration = 1.0f;
     public bool IsInvulnerable = false;
@@ -31,6 +33,11 @@ public class HasHealth : MonoBehaviour
         else
         {
             MaximizeHealth();
+        }
+
+        if (num_health < 0)
+        {
+            AudioSource.PlayClipAtPoint(damageAudio, Camera.main.transform.position);
         }
     }
 
@@ -70,7 +77,8 @@ public class HasHealth : MonoBehaviour
             // if enemy dies, potentially drops an item
             if (gameObject.tag == "Enemy")
             {
-                GameManager.instance.DropItem(Random.Range(0, 2), position, itemDropRate);
+                room.EnemyDeath();
+                GameManager.instance.DropItem(Random.Range(0, 3), position, itemDropRate);
             }
         }    
     }

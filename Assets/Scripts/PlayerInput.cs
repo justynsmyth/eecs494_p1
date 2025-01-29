@@ -118,7 +118,6 @@ public class PlayerInput  : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             manager.CheatModeToggle();
-            Debug.Log("1 Key Pressed");
         } 
     }
 }

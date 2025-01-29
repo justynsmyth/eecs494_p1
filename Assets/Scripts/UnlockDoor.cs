@@ -9,6 +9,7 @@ public class UnlockDoor : MonoBehaviour
     public bool verticalDoor;
     public GameObject otherDoor;
     public bool removeKey = true;
+    public bool unlockableWithKey = true;
 
     private Inventory player_inventory;
     private bool locked = true;
@@ -36,9 +37,27 @@ public class UnlockDoor : MonoBehaviour
         }
     }
 
+    public void DoorUnlock()
+    {
+        if (locked)
+        {
+            Instantiate(openDoor, gameObject.transform.position, Quaternion.identity);
+            gameObject.GetComponent<SpriteRenderer>().sprite = openDoorSprite;
+            Destroy(gameObject.GetComponent<BoxCollider>());
+
+            locked = false;
+
+            AudioSource.PlayClipAtPoint(openDoorSound, Camera.main.transform.position);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && locked)
+        if (!unlockableWithKey)
+        {
+            return;
+        }
+        else if (collision.gameObject.CompareTag("Player") && locked)
         {
             player_inventory = collision.gameObject.GetComponent<Inventory>();
 

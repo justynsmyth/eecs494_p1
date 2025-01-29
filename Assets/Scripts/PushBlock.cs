@@ -14,6 +14,9 @@ public class PushBlock : MonoBehaviour
     public PushType pushType;
     public float moveDuration = 0.05f;
     
+    public AudioClip pushAudio;
+
+    public UnlockDoor door;
 
     private bool isMoving = false;
     private bool isPushed = false;
@@ -43,7 +46,13 @@ public class PushBlock : MonoBehaviour
 
                 if (holdTime >= moveDuration && transform.position == startPosition)
                 {
+                    AudioSource.PlayClipAtPoint(pushAudio, Camera.main.transform.position);
                     StartCoroutine(MoveBlock(Input.GetAxisRaw(pushType.ToString())));
+
+                    if (door != null)
+                    {
+                        door.DoorUnlock();
+                    }
                 }
             }
             else

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject rupee;
     public GameObject heart;
     public GameObject key;
+    public GameObject bomb;
     public Inventory inventory;
     public HasHealth player_health;
     public GameObject enemyPrefab;
@@ -28,9 +29,6 @@ public class GameManager : MonoBehaviour
     public int enemies = 0;
 
     private List<Vector3> usedSpawnLocations = new List<Vector3>();
-
-    private Vector2 currentRoom;
-    private int numKills;
 
     public static bool god_mode = false;
 
@@ -45,27 +43,11 @@ public class GameManager : MonoBehaviour
         if (inventory == null) { Debug.LogError("inventory is null"); }
         if (rupee == null) { Debug.LogError("rupee is null"); }
         if (heart == null) { Debug.LogError("heart is null"); }
-
-        numKills = 0;
-    }
-
-    void Update()
-    {
-        if (RoomTransition.isTransitionInProgress)
-        {
-            numKills = 0;
-        }   
     }
 
     public void DropItem(int index, Vector3 location, float itemDropRate)
     {
-        numKills++;
-
-        if (numKills == 5)
-        {
-            Instantiate(key, location, Quaternion.identity);
-        }
-        else if (Random.Range(0.0f, 1.0f) < itemDropRate)
+        if (Random.Range(0.0f, 1.0f) < itemDropRate)
         {
             if (index == 0)
             {
@@ -74,6 +56,10 @@ public class GameManager : MonoBehaviour
             else if (index == 1)
             {
                 Instantiate(heart, location, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(bomb, location, Quaternion.identity);
             }
         }
     }

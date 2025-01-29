@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Sword : Weapons
 {
-    
     public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown)
     {
         Prefab_Up = up;

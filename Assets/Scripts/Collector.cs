@@ -8,6 +8,8 @@ public class Collector : MonoBehaviour
     public AudioClip rupee_collection_sound_clip;
     public AudioClip heart_collection_sound_clip;
     public AudioClip key_collection_sound_clip;
+
+    public AudioClip damage_item_collection_sound_clip;
     public AudioClip weapon_collection_sound_clip;
 
     public Sprite weaponPickupSprite;
@@ -75,6 +77,7 @@ public class Collector : MonoBehaviour
             inventory.UpdateZSlotItem("Bow"); 
 
             AudioSource.PlayClipAtPoint(weapon_collection_sound_clip, Camera.main.transform.position);
+            AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
 
             Destroy(object_collided_with);
 
@@ -95,7 +98,7 @@ public class Collector : MonoBehaviour
                 Destroy(object_collided_with);
             }
 
-            // play sound effect and animation
+            AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
         } else if (object_collided_with.tag == "boomerang")
         {
             if (inventory)
@@ -107,6 +110,8 @@ public class Collector : MonoBehaviour
 
             if (b != null && b.isDrop)
             {
+                AudioSource.PlayClipAtPoint(weapon_collection_sound_clip, Camera.main.transform.position);
+                AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
                 Destroy(object_collided_with);
             }
             // play sound effect and animation
