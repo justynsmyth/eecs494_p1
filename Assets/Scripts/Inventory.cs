@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 
 public class Inventory : MonoBehaviour
 {
@@ -50,18 +51,20 @@ public class Inventory : MonoBehaviour
         Bow bow = Instantiate(WeaponPrefab).GetComponent<Bow>();
         Boomerang boomerang = Instantiate(WeaponPrefab).GetComponent<Boomerang>();
         Bomb bomb = Instantiate(WeaponPrefab).GetComponent<Bomb>();
+        PortalGun portal_gun = Instantiate(WeaponPrefab).GetComponent<PortalGun>();
 
         sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, ProjectileCooldown);
         bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, this);
         boomerang.Setup(BoomerangPrefab, ProjectileCooldown * 1.5f, gameObject); // boomerang needs longer to cooldown
-        bomb.Setup(BombPrefab, ProjectileCooldown);
+        bomb.Setup(BombPrefab, ProjectileCooldown, this);
         
         weapons = new Dictionary<string, Weapons>
         {
             { "Sword", sword },
             { "Bow",   bow },
             { "Bomb", bomb},
-            { "Boomerang", boomerang }
+            { "Boomerang", boomerang },
+            { "Portal Gun", portal_gun }
         }; 
     }
 
@@ -105,10 +108,15 @@ public class Inventory : MonoBehaviour
     {
         return key_count;
     }
-    
+
+    public int GetBombs()
+    {
+        return bomb_count;
+    }
+
     // Used to identify the Z Slot. Update this to include more Z slot items
     private string currentZSlotItem = "";
-    private readonly HashSet<string> zSlotItems = new HashSet<string> { "Bow", "Bomb", "Boomerang" };
+    private readonly HashSet<string> zSlotItems = new HashSet<string> { "Bow", "Bomb", "Boomerang", "Portal Gun" };
     
     private string currentXSlotItem = "Sword";
     private readonly HashSet<string> xSlotItems = new HashSet<string> { "Sword" };
@@ -188,6 +196,10 @@ public class Inventory : MonoBehaviour
         else if (weaponName == "Bomb")
         {
             AudioSource.PlayClipAtPoint(bombSound, Camera.main.transform.position);
+        }
+        else if (weaponName == "Portal Gun")
+        {
+            // Find an audio clip we can use
         }
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);

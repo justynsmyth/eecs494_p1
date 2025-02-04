@@ -7,11 +7,15 @@ public class Bomb : Weapons
     private RoomTransition.Direction direction;
     public bool isDrop = true;
     public BoxCollider triggerColliderToEnable;
-    public void Setup(GameObject bombPrefab, float cooldown)
+
+    private Inventory inv;
+
+    public void Setup(GameObject bombPrefab, float cooldown, Inventory _inv)
     {
         prefab = bombPrefab;
         Cooldown = cooldown;
         IsOnCooldown = false;
+        inv = _inv;
     }
 
     public override void HandleAnimation(InputToAnimator animator)
@@ -22,7 +26,7 @@ public class Bomb : Weapons
 
     public override void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction)
     {
-        if (!IsOnCooldown)
+        if (!IsOnCooldown && inv.GetBombs() > 0)
         {
             Cooldown_Left = Time.time + Cooldown;
             switch (direction)
@@ -42,6 +46,7 @@ public class Bomb : Weapons
             }
             GameObject bombInst = Instantiate(prefab, position, rotation);
             bombInst.GetComponent<Bomb>().isDrop = false;
+            inv.AddBomb(-1);
             anim = bombInst.GetComponentInChildren<Animator>();
             StartCoroutine(TriggerExplosion(bombInst));
             

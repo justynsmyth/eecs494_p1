@@ -9,6 +9,7 @@ public class HasHealth : MonoBehaviour
 
     public float itemDropRate = 0.4f;
     public RoomClear room;
+    public float stunDuration = 3f;
 
     public AudioClip damageAudio;
 
@@ -147,5 +148,14 @@ public class HasHealth : MonoBehaviour
         player_iframes = false;
         player.control = true;
         currentSprite.color = Color.white;
+    }
+
+    public IEnumerator StunCooldown()
+    {
+        EnemyMovement em = GetComponent<EnemyMovement>();
+        em.stopMovement = true;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        yield return new WaitForSeconds(stunDuration);
+        em.stopMovement = false;
     }
 }

@@ -25,5 +25,9 @@ public class ItemCountDisplayer : MonoBehaviour
         {
             text_component.text = "Keys: " + inventory.GetKeys().ToString();
         }
+        else if (inventory && text_component && item_to_display == "bombs")
+        {
+            text_component.text = "Bombs: " + inventory.GetBombs().ToString();
+        }
     }
 }

@@ -82,6 +82,11 @@ public class Collector : MonoBehaviour
         }
         else if (object_collided_with.tag == "bomb")
         {
+            if (!object_collided_with.GetComponent<Bomb>().isDrop)
+            {
+                return;
+            }
+
             if (inventory)
             {
                 inventory.AddBomb(1);
