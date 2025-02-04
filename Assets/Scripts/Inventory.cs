@@ -23,6 +23,11 @@ public class Inventory : MonoBehaviour
     public GameObject ArrowProjectilePrefab_Up;
     public GameObject ArrowProjectilePrefab_Down;
 
+    public GameObject PortalGunProjectilePrefab_Left;
+    public GameObject PortalGunProjectilePrefab_Right;
+    public GameObject PortalGunProjectilePrefab_Up;
+    public GameObject PortalGunProjectilePrefab_Down;
+
     public GameObject BoomerangPrefab;
 
     public GameObject BombPrefab;
@@ -39,6 +44,7 @@ public class Inventory : MonoBehaviour
     public AudioClip bowSound;
     public AudioClip boomerangSound;
     public AudioClip bombSound;
+    public AudioClip laserSound;
 
     private Dictionary<string, Weapons> weapons;
     
@@ -58,7 +64,8 @@ public class Inventory : MonoBehaviour
         bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, this);
         boomerang.Setup(BoomerangPrefab, ProjectileCooldown * 1.5f, gameObject); // boomerang needs longer to cooldown
         bomb.Setup(BombPrefab, ProjectileCooldown, this);
-        
+        portal_gun.Setup(PortalGunProjectilePrefab_Up, PortalGunProjectilePrefab_Down, PortalGunProjectilePrefab_Left, PortalGunProjectilePrefab_Right, ProjectileCooldown, this);
+
         weapons = new Dictionary<string, Weapons>
         {
             { "Sword", sword },
@@ -229,7 +236,7 @@ public class Inventory : MonoBehaviour
         }
         else if (weaponName == "Portal Gun")
         {
-            // Find an audio clip we can use
+            AudioSource.PlayClipAtPoint(laserSound, Camera.main.transform.position);
         }
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);

@@ -13,6 +13,7 @@ TagManager:
   - Enemy Attack
   - bomb
   - boomerang
+  - portal gun
   layers:
   - Default
   - TransparentFX
