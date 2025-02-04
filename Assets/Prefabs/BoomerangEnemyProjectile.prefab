@@ -127,7 +127,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 768
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -170,6 +170,7 @@ MonoBehaviour:
   projectileLifeTime: 1
   returnSpeedMultiplier: 0.5
   maxTravelTime: 0.25
+  audio: {fileID: 8300000, guid: c9481fcfeb7ee514db0498a816ffe2a8, type: 3}
 --- !u!54 &5664493872839730779
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -209,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b07f0c0cb31d4f444a5528569a1d68f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDrop: 1
+  isDrop: 0
 --- !u!65 &1184199876044231601
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -247,7 +248,4 @@ MonoBehaviour:
   healthDamagedOnTouch: 0
   knockback_power: 0
   destroy_self_on_touch: 0
-  invulnerability_duration: 1
   ignoreBoomerang: 1
-  stunDuration: 0
-  IsInvulnerable: 0

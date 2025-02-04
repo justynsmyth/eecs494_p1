@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 
 public class Inventory : MonoBehaviour
@@ -99,6 +100,14 @@ public class Inventory : MonoBehaviour
         bomb_count = max_inventory_value;
     }
 
+    public void UnlockAllWeapons()
+    {
+        foreach (var key in zSlotItems.Keys.ToList())
+        {
+            zSlotItems[key] = true;
+        }
+    }
+
     public int GetRupees()
     {
         return rupee_count;
@@ -115,18 +124,28 @@ public class Inventory : MonoBehaviour
     }
 
     // Used to identify the Z Slot. Update this to include more Z slot items
+    // All items are set to false.
     private string currentZSlotItem = "";
-    private readonly HashSet<string> zSlotItems = new HashSet<string> { "Bow", "Bomb", "Boomerang", "Portal Gun" };
+    private readonly Dictionary<string, bool> zSlotItems = new Dictionary<string, bool>
+    {
+        { "Bow", false },
+        { "Bomb", false },
+        { "Boomerang", false },
+        { "Portal Gun", false }
+    };
     
     private string currentXSlotItem = "Sword";
     private readonly HashSet<string> xSlotItems = new HashSet<string> { "Sword" };
     
     public void UpdateZSlotItem(string newItem)
     {
-        if (!zSlotItems.Contains(newItem)) return;
+        if (!zSlotItems.ContainsKey(newItem)) return;
+        zSlotItems[newItem] = true; // unlock the weapon
         currentZSlotItem = newItem;
         Debug.Log($"Z-slot updated to: {currentZSlotItem}");
     }
+
+
     public void UpdateXSlotItem(string newItem)
     {
         if (!xSlotItems.Contains(newItem)) return;
@@ -151,15 +170,26 @@ public class Inventory : MonoBehaviour
         PlayerInput.OnZPressed -= () => UseWeapon(currentZSlotItem);
         PlayerInput.OnSpacePressed -= SwapZSlotItem;
     }
-    
     private void SwapZSlotItem()
     {
-        var zSlotArray = new List<string>(zSlotItems);
-        int currentIndex = zSlotArray.IndexOf(currentZSlotItem);
-        int nextIndex = (currentIndex + 1) % zSlotArray.Count;
-        currentZSlotItem = zSlotArray[nextIndex];
+        // Get only unlocked items
+        // 1. Filter values that are true 2. select the keys for each of these 3. convert it to a new list
+        var unlockedItems = zSlotItems.Where(item => item.Value)
+            .Select(item => item.Key)
+            .ToList();
+        if (unlockedItems.Count == 0)
+        {
+            Debug.Log("No unlocked Z-slot items to swap to.");
+            return;
+        }
+
+        int currentIndex = unlockedItems.IndexOf(currentZSlotItem);
+        int nextIndex = (currentIndex + 1) % unlockedItems.Count;
+        currentZSlotItem = unlockedItems[nextIndex];
+
         Debug.Log($"Z-slot item swapped to: {currentZSlotItem}");
     }
+
     
     private void UseWeapon(string weaponName)
     {

@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("god_mode on!");
             god_mode = true;
             inventory.MaximizeResources();
+            inventory.UnlockAllWeapons();
             player_health.MaximizeHealth();
             inventory.UpdateXSlotItem("Sword");
             inventory.UpdateZSlotItem("Bow");

@@ -24,9 +24,11 @@ public class Boomerang : Weapons
         {
             Cooldown_Left = Time.time + Cooldown;
             GameObject b = Instantiate(prefab, position, rotation);
-            b.GetComponent<Boomerang>().isDrop = false;
+            Boomerang newBoomerang = b.GetComponent<Boomerang>();
+            newBoomerang.isDrop = false;
+            newBoomerang.Setup(prefab, Cooldown, _owner); // Ensure the owner is set for each boomerang
+            
             BoomerangProjectile projectile = b.GetComponent<BoomerangProjectile>();
-
             if (projectile != null)
             {
                 projectile.Setup(_owner);

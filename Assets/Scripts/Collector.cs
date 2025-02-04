@@ -103,12 +103,17 @@ public class Collector : MonoBehaviour
             AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
         } else if (object_collided_with.tag == "boomerang")
         {
+            Boomerang b = object_collided_with.GetComponent<Boomerang>();
+            
+            if (b != null && !b.isDrop)
+            {
+                return; // ignores collision if boomerang is not a drop
+            }
+
             if (inventory)
             {
                 inventory.UpdateZSlotItem("Boomerang");
             }
-            
-            Boomerang b = object_collided_with.GetComponent<Boomerang>();
 
             if (b != null && b.isDrop)
             {
