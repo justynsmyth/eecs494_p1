@@ -13,7 +13,7 @@ public class Bomb : Weapons
     public void Setup(GameObject bombPrefab, float cooldown, Inventory _inv)
     {
         prefab = bombPrefab;
-        Cooldown = cooldown;
+        CooldownDuration = cooldown;
         IsOnCooldown = false;
         inv = _inv;
     }
@@ -28,7 +28,7 @@ public class Bomb : Weapons
     {
         if (!IsOnCooldown && inv.GetBombs() > 0)
         {
-            Cooldown_Left = Time.time + Cooldown;
+            Cooldown_Left = Time.time + CooldownDuration;
             switch (direction)
             {
                 case RoomTransition.Direction.Up:

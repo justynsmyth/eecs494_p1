@@ -51,7 +51,11 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stopMovement) return;
+        if (stopMovement)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
         timeSinceDirectionChange += Time.deltaTime;
         timeSinceAnimation += Time.deltaTime;
 

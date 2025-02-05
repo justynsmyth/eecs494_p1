@@ -10,7 +10,7 @@ public class Bow : Weapons
         Prefab_Down = down;
         Prefab_Left = left;
         Prefab_Right = right;
-        Cooldown = cooldown;
+        CooldownDuration = cooldown;
         IsOnCooldown = false;
         inv = _inv;
     }
@@ -25,7 +25,6 @@ public class Bow : Weapons
                 Instantiate(prefabToInstantiate, position, rotation);
                 inv.AddRupees(-1);
                 IsOnCooldown = true;
-
                 inv.StartCoroutine(ResetCooldownCoroutine());
             }
         }
@@ -33,7 +32,7 @@ public class Bow : Weapons
     
     protected IEnumerator ResetCooldownCoroutine()
     {
-        yield return new WaitForSeconds(Cooldown);
+        yield return new WaitForSeconds(CooldownDuration);
         IsOnCooldown = false;
     }
 

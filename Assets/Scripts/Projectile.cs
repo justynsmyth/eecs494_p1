@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            TriggerExplosion(projectileLifeTime);
+            TriggerImpactAction(projectileLifeTime);
             HideProjectile();
             Destroy(gameObject, projectileLifeTime + 0.1f);
         }
@@ -43,7 +43,8 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    protected virtual void TriggerExplosion(float lifeTime)
+    // Use as calling function in inherited class when projectile collides
+    protected virtual void TriggerImpactAction(float lifeTime)
     {
        // implemented in inherited classes 
     }

@@ -7,9 +7,8 @@ public abstract class Weapons : MonoBehaviour
     public GameObject Prefab_Left { get; set; }
     public GameObject Prefab_Right { get; set; }
 
-    public float Cooldown{ get; set; }
+    public float CooldownDuration { get; set; }
     public bool IsOnCooldown { get; set; }
-    
     public float Cooldown_Left { get; set; }
 
     public abstract void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction);

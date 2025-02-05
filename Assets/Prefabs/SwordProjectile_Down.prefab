@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5605880475322425362}
   - component: {fileID: 2232760347113193275}
   - component: {fileID: 3355537203971932763}
+  - component: {fileID: 2105913395902135507}
   m_Layer: 7
   m_Name: SwordProjectile_Down
   m_TagString: Weapon
@@ -176,3 +177,18 @@ MonoBehaviour:
   - {fileID: 21300204, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}
   spritePrefab: {fileID: 465813395590764866, guid: f25880b3284e180418ccdd57650b09ed, type: 3}
   radius: 1.5
+--- !u!114 &2105913395902135507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7539156202310071947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25333d8fc8a94c2e8958853916b1024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashInterval: 0.1
+  flashOnStart: 1
+  targetColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 1}

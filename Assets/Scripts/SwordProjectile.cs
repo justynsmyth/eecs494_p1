@@ -10,10 +10,11 @@ public class SwordProjectile : Projectile
     private bool _triggered = false;
     private float _lifeTime = 0f;
 
-    protected override void TriggerExplosion(float lifeTime)
+    protected override void TriggerImpactAction(float lifeTime)
     {
         if (!_triggered)
         {
+            _triggered = true;
             _lifeTime = lifeTime;
             SpawnSwordExplosionSprites();
         }
@@ -21,7 +22,6 @@ public class SwordProjectile : Projectile
 
     private void SpawnSwordExplosionSprites()
     {
-        _triggered = true;
         if (sprites == null || sprites.Length < 4)
         {
             Debug.LogWarning("Sword Projectiles is not set up properly");

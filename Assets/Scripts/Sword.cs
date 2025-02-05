@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Sword : Weapons
 {
@@ -8,7 +9,7 @@ public class Sword : Weapons
         Prefab_Down = down;
         Prefab_Left = left;
         Prefab_Right = right;
-        Cooldown = cooldown;
+        CooldownDuration = cooldown;
         IsOnCooldown = false;
     }
 
@@ -21,15 +22,18 @@ public class Sword : Weapons
     {
         if (GameManager.instance.player_health.HasMaxHealth() && !IsOnCooldown)
         {
-            Cooldown_Left = Time.time + Cooldown;
+            Cooldown_Left = Time.time + CooldownDuration;
             GameObject prefabToInstantiate = SelectPrefabByDirection(direction);
             Instantiate(prefabToInstantiate, position, rotation);
             IsOnCooldown = true;
+            StartCoroutine(ResetCooldownCoroutine());
         }
-        else if (Time.time >= Cooldown_Left)
-        {
-           IsOnCooldown = false; 
-        }
+    }
+    
+    protected IEnumerator ResetCooldownCoroutine()
+    {
+        yield return new WaitForSeconds(CooldownDuration);
+        IsOnCooldown = false;
     }
 }
 

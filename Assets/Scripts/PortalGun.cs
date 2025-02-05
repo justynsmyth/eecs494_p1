@@ -11,7 +11,7 @@ public class PortalGun : Weapons
         Prefab_Down = down;
         Prefab_Left = left;
         Prefab_Right = right;
-        Cooldown = cooldown;
+        CooldownDuration = cooldown;
         IsOnCooldown = false;
         inv = _inv;
     }
@@ -33,7 +33,7 @@ public class PortalGun : Weapons
 
     protected IEnumerator ResetCooldownCoroutine()
     {
-        yield return new WaitForSeconds(Cooldown);
+        yield return new WaitForSeconds(CooldownDuration);
         IsOnCooldown = false;
     }
 

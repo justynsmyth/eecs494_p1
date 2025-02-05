@@ -8,7 +8,7 @@ public class Boomerang : Weapons
     public void Setup(GameObject boomPrefab, float cooldown, GameObject owner)
     {
         prefab = boomPrefab; 
-        Cooldown = cooldown;
+        CooldownDuration = cooldown;
         IsOnCooldown = false;
         _owner = owner;
     }
@@ -22,11 +22,11 @@ public class Boomerang : Weapons
     {
         if (!IsOnCooldown)
         {
-            Cooldown_Left = Time.time + Cooldown;
+            Cooldown_Left = Time.time + CooldownDuration;
             GameObject b = Instantiate(prefab, position, rotation);
             Boomerang newBoomerang = b.GetComponent<Boomerang>();
             newBoomerang.isDrop = false;
-            newBoomerang.Setup(prefab, Cooldown, _owner); // Ensure the owner is set for each boomerang
+            newBoomerang.Setup(prefab, CooldownDuration, _owner); // Ensure the owner is set for each boomerang
             
             BoomerangProjectile projectile = b.GetComponent<BoomerangProjectile>();
             if (projectile != null)

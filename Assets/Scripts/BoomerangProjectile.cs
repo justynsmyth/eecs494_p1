@@ -123,13 +123,14 @@ public class BoomerangProjectile : Projectile
             OnReturn?.Invoke();
             Destroy(gameObject);
         }
-        else if (((other.CompareTag("Enemy") && _owner.CompareTag("Player")) ||
-                  (other.CompareTag("Player") && _owner.CompareTag("Enemy"))) 
-                 && _owner != other.gameObject)
+        else if ((other.CompareTag("Enemy") && _owner.CompareTag("Player")) ||
+                  ((other.CompareTag("Player") || other.CompareTag("Wall")) && _owner.CompareTag("Enemy") 
+                 && _owner != other.gameObject))
         {
             isReturning = true;
         } else if (other.CompareTag("Weapon") && _owner.CompareTag("Enemy") && _owner != other.gameObject)
         {
+            // If weapon collides with projectile, it will deflect
             isReturning = true;
             if (audio != null) {
                 AudioSource.PlayClipAtPoint(audio, Camera.main.transform.position);
