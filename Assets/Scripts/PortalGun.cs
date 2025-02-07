@@ -18,6 +18,15 @@ public class PortalGun : Weapons
 
     public override void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction)
     {
+        GameObject portalA = GameObject.Find("PortalA(Clone)");
+        GameObject portalB = GameObject.Find("PortalB(Clone)");
+        if (portalA != null && portalB != null)
+        {
+            Destroy(portalA);
+            Destroy(portalB);
+
+            return;
+        }
         if (!IsOnCooldown)
         {
             GameObject prefabToInstantiate = SelectPrefabByDirection(direction);

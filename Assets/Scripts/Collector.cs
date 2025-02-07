@@ -131,10 +131,11 @@ public class Collector : MonoBehaviour
         float timeElapsed = 0f;
         
         Sprite currentSprite = playerSprite.sprite;
-        playerSprite.sprite = weaponPickupSprite;
 
         PlayerInput playerControl = GetComponent<PlayerInput>();
         playerControl.control = false;
+
+        playerSprite.sprite = weaponPickupSprite;
 
         item.transform.position += Vector3.up * 1;
 
