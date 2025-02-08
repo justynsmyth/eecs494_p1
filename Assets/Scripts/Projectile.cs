@@ -11,6 +11,11 @@ public class Projectile : MonoBehaviour
     protected virtual void Start()
     {
         rb = GetComponent<Rigidbody>();
+        UpdateMovement();
+    }
+
+    public void UpdateMovement()
+    {
         rb.linearVelocity = projectileDirection * projectileSpeed;
     }
 

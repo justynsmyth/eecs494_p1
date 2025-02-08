@@ -16,7 +16,8 @@ public class PortalLaser : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {        
         // check for collisions with objects of default or block layer
-        if ((collision.gameObject.layer == 0) && !used)
+        // comparetag needed for locked doors atm
+        if ((collision.gameObject.layer == 0 || collision.gameObject.layer == 6) && !collision.gameObject.CompareTag("Doorway") &&!used)
         {
             Debug.Log("Collided with wall");
             // create a portal
