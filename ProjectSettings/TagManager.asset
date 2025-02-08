@@ -15,6 +15,7 @@ TagManager:
   - boomerang
   - portal gun
   - Wall
+  - Doorway
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - FlyingEnemy
   - Trap
   - EnemyAttack
-  - 
+  - PortalLaser
   - 
   - 
   - 
