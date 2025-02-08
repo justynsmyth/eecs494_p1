@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Portal : MonoBehaviour
@@ -6,8 +5,10 @@ public class Portal : MonoBehaviour
     public Vector3 offset;
     public Vector3 dest;
     public GameObject teleportTo;
+    public float portalCooldown = 0.5f;
 
     private string direction;
+    private float timeOfTeleport;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,9 +32,18 @@ public class Portal : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // check if a 2nd portal exists, then teleport player to that portal
-        if (teleportTo)
+        if (teleportTo && (Time.time - timeOfTeleport >= portalCooldown))
         {
             other.gameObject.transform.position = teleportTo.transform.position + teleportTo.GetComponent<Portal>().offset;
+            Debug.Log(teleportTo.GetComponent<Portal>().offset);
+
+            SetTimeOfTeleport();
+            teleportTo.GetComponent<Portal>().SetTimeOfTeleport();
         }
+    }
+
+    public void SetTimeOfTeleport()
+    {
+        timeOfTeleport = Time.time;
     }
 }

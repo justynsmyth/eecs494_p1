@@ -1,10 +1,10 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PortalGun : Weapons
 {
     private Inventory inv;
+    private int numPortals = 0;
     public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown, Inventory _inv)
     {
         Prefab_Up = up;
@@ -24,16 +24,20 @@ public class PortalGun : Weapons
         {
             Destroy(portalA);
             Destroy(portalB);
+            numPortals = 0;
 
             return;
         }
-        if (!IsOnCooldown)
+        if (!IsOnCooldown && numPortals < 2)
         {
             GameObject prefabToInstantiate = SelectPrefabByDirection(direction);
             if (prefabToInstantiate != null)
             {
-                Instantiate(prefabToInstantiate, position, rotation);
+                GameObject projectileLaser = Instantiate(prefabToInstantiate, position, rotation);
+                projectileLaser.GetComponent<PortalLaser>().portalGun = this;
+
                 IsOnCooldown = true;
+                SetNumPortals(1);   
 
                 inv.StartCoroutine(ResetCooldownCoroutine());
             }
@@ -49,5 +53,10 @@ public class PortalGun : Weapons
     public override void HandleAnimation(InputToAnimator animator)
     {
         animator.HandleBowAnimation();
+    }
+
+    public void SetNumPortals(int num)
+    {
+        numPortals += num;
     }
 }

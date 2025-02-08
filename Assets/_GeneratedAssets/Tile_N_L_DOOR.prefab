@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2968504713344321630}
   - component: {fileID: 5224785053878900099}
   - component: {fileID: 1818769922502798416}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tile_N_L_DOOR
-  m_TagString: Untagged
+  m_TagString: Doorway
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 32768
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 3839

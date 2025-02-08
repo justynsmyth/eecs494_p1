@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 903793412181830229}
   - component: {fileID: 4527864752750867458}
   - component: {fileID: 3629185970150382112}
-  m_Layer: 7
+  m_Layer: 15
   m_Name: PortalLaserPrefabLeft
-  m_TagString: Weapon
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,10 +101,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 32702
+    m_Bits: 31678
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
