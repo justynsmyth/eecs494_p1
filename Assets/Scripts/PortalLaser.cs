@@ -19,7 +19,7 @@ public class PortalLaser : MonoBehaviour
     {        
         // check for collisions with objects of default or block layer
         // comparetag needed for locked doors atm
-        if ((collision.gameObject.layer == 0 || collision.gameObject.layer == 6) && !collision.gameObject.CompareTag("Doorway") &&!used)
+        if ((collision.gameObject.layer == 0) && !collision.gameObject.CompareTag("Doorway") && !used)
         {
             Debug.Log("Collided with wall");
 
@@ -66,7 +66,7 @@ public class PortalLaser : MonoBehaviour
                 }
             }
             
-            GameObject newPortal = Instantiate(portalPrefab, spawnPosition, rotation);
+            GameObject newPortal = Instantiate(portalParent, spawnPosition, rotation);
 
             Portal newPortalScript = newPortal.GetComponent<Portal>();
             newPortalScript.offset = (gameObject.GetComponent<Projectile>().projectileDirection * -1).normalized;

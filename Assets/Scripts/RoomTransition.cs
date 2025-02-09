@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RoomTransition : MonoBehaviour
@@ -89,7 +90,8 @@ public class RoomTransition : MonoBehaviour
 
     private IEnumerator TransitionCameraAndMovePlayer(Direction moveDirection, GameObject player)
     {
-        isTransitionInProgress = true; 
+        isTransitionInProgress = true;
+        player.GetComponent<SpriteRenderer>().enabled = false;
         Vector3 startPos = cam.transform.position;
         Vector3 endPos = startPos + GetDirectionVector(moveDirection);
 
@@ -97,7 +99,9 @@ public class RoomTransition : MonoBehaviour
             MoveObjectOverTime(
                 cam.transform, startPos, endPos, transitionTime)
         );
-        
+
+        player.GetComponent<SpriteRenderer>().enabled = true;
+
         yield return StartCoroutine(MovePlayerForwardForDuration(player, moveDirection, 0.5f));
 
         isTransitionInProgress = false;

@@ -5,7 +5,7 @@ public class PortalGun : Weapons
 {
     private Inventory inv;
     private int numPortals = 0;
-    public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown, Inventory _inv)
+    public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown, AudioClip sound, Inventory _inv)
     {
         Prefab_Up = up;
         Prefab_Down = down;
@@ -13,6 +13,7 @@ public class PortalGun : Weapons
         Prefab_Right = right;
         CooldownDuration = cooldown;
         IsOnCooldown = false;
+        SoundClip = sound;
         inv = _inv;
     }
 
@@ -33,6 +34,7 @@ public class PortalGun : Weapons
             {
                 GameObject projectileLaser = Instantiate(prefabToInstantiate, position, rotation);
                 projectileLaser.GetComponent<PortalLaser>().portalGun = this;
+                AudioSource.PlayClipAtPoint(SoundClip, Camera.main.transform.position);
 
                 IsOnCooldown = true;
                 SetNumPortals(1);   
@@ -50,7 +52,14 @@ public class PortalGun : Weapons
 
     public override void HandleAnimation(InputToAnimator animator)
     {
-        animator.HandleBowAnimation();
+        if (!IsOnCooldown && numPortals < 2)
+        {
+            animator.HandleBowAnimation();
+        }
+        else
+        {
+            PlayerInput.IsActionInProgress = false;
+        }
     }
 
     public void SetNumPortals(int num)

@@ -4,7 +4,7 @@ using System.Collections;
 public class Bow : Weapons
 { 
     private Inventory inv;
-    public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown, Inventory _inv)
+    public void Setup(GameObject up, GameObject down, GameObject left, GameObject right, float cooldown, AudioClip sound, Inventory _inv)
     {
         Prefab_Up = up;
         Prefab_Down = down;
@@ -12,6 +12,7 @@ public class Bow : Weapons
         Prefab_Right = right;
         CooldownDuration = cooldown;
         IsOnCooldown = false;
+        SoundClip = sound;
         inv = _inv;
     }
 
@@ -24,6 +25,8 @@ public class Bow : Weapons
             {
                 Instantiate(prefabToInstantiate, position, rotation);
                 inv.AddRupees(-1);
+                AudioSource.PlayClipAtPoint(SoundClip, Camera.main.transform.position);
+
                 IsOnCooldown = true;
                 inv.StartCoroutine(ResetCooldownCoroutine());
             }
@@ -38,9 +41,13 @@ public class Bow : Weapons
 
     public override void HandleAnimation(InputToAnimator animator)
     {
-        if (inv.GetRupees() > 0)
+        if (!IsOnCooldown && inv.GetRupees() > 0)
         {
             animator.HandleBowAnimation();
+        }
+        else
+        {
+            PlayerInput.IsActionInProgress = false;
         }
     }
 }

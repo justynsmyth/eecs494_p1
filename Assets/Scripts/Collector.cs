@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Collector : MonoBehaviour
@@ -69,16 +70,21 @@ public class Collector : MonoBehaviour
             // Play sound effect
             AudioSource.PlayClipAtPoint(key_collection_sound_clip, Camera.main.transform.position);
         }
-        else if (object_collided_with.tag == "bow")
+        else if (object_collided_with.tag == "bow" || object_collided_with.tag == "portal gun")
         {
-            inventory.UpdateZSlotItem("Bow"); 
+            if (object_collided_with.tag == "bow")
+            {
+                inventory.UpdateZSlotItem("Bow");
+            }
+            else if (object_collided_with.tag == "portal gun")
+            {
+                inventory.UpdateZSlotItem("Portal Gun");
+            }
 
             AudioSource.PlayClipAtPoint(weapon_collection_sound_clip, Camera.main.transform.position);
             AudioSource.PlayClipAtPoint(damage_item_collection_sound_clip, Camera.main.transform.position);
 
-            Destroy(object_collided_with);
-
-            //StartCoroutine(WeaponPickup(GetComponent<SpriteRenderer>(), object_collided_with));
+            StartCoroutine(WeaponPickup(GetComponent<SpriteRenderer>(), object_collided_with));
         }
         else if (object_collided_with.tag == "bomb")
         {
@@ -124,20 +130,22 @@ public class Collector : MonoBehaviour
             // play sound effect and animation
         }
     }
-
-    /*
+    
     IEnumerator WeaponPickup(SpriteRenderer playerSprite, GameObject item)
     {
         float timeElapsed = 0f;
         
         Sprite currentSprite = playerSprite.sprite;
+        GetComponent<InputToAnimator>().ToggleMovement();
 
         PlayerInput playerControl = GetComponent<PlayerInput>();
         playerControl.control = false;
+        GetComponent<Rigidbody>().linearVelocity = Vector2.zero;
 
         playerSprite.sprite = weaponPickupSprite;
 
-        item.transform.position += Vector3.up * 1;
+        gameObject.transform.position = item.transform.position;
+        item.transform.position += Vector3.up * item.GetComponent<BoxCollider>().size.y;
 
         while (timeElapsed < animationTime)
         {
@@ -146,9 +154,9 @@ public class Collector : MonoBehaviour
         }
 
         playerSprite.sprite = currentSprite;
+        GetComponent<InputToAnimator>().ToggleMovement();
         playerControl.control = true;
 
         Destroy(item);
     }
-    */
 }

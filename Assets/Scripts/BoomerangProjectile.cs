@@ -9,7 +9,7 @@ public class BoomerangProjectile : Projectile
     public float returnSpeedMultiplier = 0.5f; // Multiplier for speed when returning
     private GameObject _owner;
     public float maxTravelTime = 0.5f; // Time before the boomerang returns
-    public AudioClip audio;
+    public AudioClip boomerangAudio;
 
     private bool isReturning = false;
     
@@ -132,8 +132,8 @@ public class BoomerangProjectile : Projectile
         {
             // If weapon collides with projectile, it will deflect
             isReturning = true;
-            if (audio != null) {
-                AudioSource.PlayClipAtPoint(audio, Camera.main.transform.position);
+            if (boomerangAudio != null) {
+                AudioSource.PlayClipAtPoint(boomerangAudio, Camera.main.transform.position);
             }
             Collider pcol = GameObject.FindGameObjectWithTag("Player").GetComponent<Collider>();
             Collider[] colliders = GetComponents<Collider>();

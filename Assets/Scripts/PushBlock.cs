@@ -4,7 +4,7 @@ using System.Collections;
 public enum PushType
 {
     Vertical,
-    Horizontal,
+    Horizontal
 }
 public class PushBlock : MonoBehaviour
 {
@@ -20,13 +20,14 @@ public class PushBlock : MonoBehaviour
 
     public UnlockDoor door;
 
+    public RoomClear room;
+
     private bool isMoving = false;
     private bool isPushed = false;
 
     private float holdTime = 0.0f;
     private Vector3 startPosition;
     
-    public LayerMask blockLayer;
 
     void Start()
     {
@@ -42,6 +43,10 @@ public class PushBlock : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         if (isMoving || isPushed) return;
+        if (room != null && !room.CheckIfCleared())
+        {
+            return;
+        }
         if (collision.gameObject.CompareTag("Player"))
         {
             // get delta to current position (NEWS)
@@ -182,5 +187,3 @@ public class PushBlock : MonoBehaviour
         return false;
     }
 }
-
-

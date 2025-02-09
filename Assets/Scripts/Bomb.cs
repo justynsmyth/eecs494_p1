@@ -10,18 +10,26 @@ public class Bomb : Weapons
 
     private Inventory inv;
 
-    public void Setup(GameObject bombPrefab, float cooldown, Inventory _inv)
+    public void Setup(GameObject bombPrefab, float cooldown, AudioClip sound, Inventory _inv)
     {
         prefab = bombPrefab;
         CooldownDuration = cooldown;
         IsOnCooldown = false;
+        SoundClip = sound;
         inv = _inv;
     }
 
     public override void HandleAnimation(InputToAnimator animator)
     { 
-        direction = animator.GetPlayerDirection();
-        animator.HandleBowAnimation();
+        if (!IsOnCooldown && inv.GetBombs() > 0)
+        {
+            direction = animator.GetPlayerDirection();
+            animator.HandleBowAnimation();
+        }
+        else
+        {
+            PlayerInput.IsActionInProgress = false;
+        }
     }
 
     public override void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction)
@@ -48,6 +56,7 @@ public class Bomb : Weapons
             bombInst.GetComponent<Bomb>().isDrop = false;
             inv.AddBomb(-1);
             anim = bombInst.GetComponentInChildren<Animator>();
+            AudioSource.PlayClipAtPoint(SoundClip, Camera.main.transform.position);
             StartCoroutine(TriggerExplosion(bombInst));
             
             IsOnCooldown = true;
