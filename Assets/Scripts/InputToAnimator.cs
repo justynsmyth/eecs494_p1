@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class InputToAnimator : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class InputToAnimator : MonoBehaviour
     private float timeSinceAnimating;
 
     private BoxCollider playerCollider;
+    private bool movementEnabled = true;
     
     private void Awake()
     {
@@ -76,7 +78,7 @@ public class InputToAnimator : MonoBehaviour
 
     void Update()
     {
-        if (RoomTransition.IsTransitionInProgress() || PlayerInput.IsActionInProgress)
+        if (RoomTransition.IsTransitionInProgress() || PlayerInput.IsActionInProgress || !movementEnabled)
         {
             return;
         }
@@ -84,6 +86,11 @@ public class InputToAnimator : MonoBehaviour
         timeSinceAnimating += Time.deltaTime;
 
         HandleMovementAnimation();
+    }
+
+    public void ToggleMovement()
+    {
+        movementEnabled = !movementEnabled;
     }
 
     private void HandleMovementAnimation()
@@ -212,4 +219,38 @@ public class InputToAnimator : MonoBehaviour
             : RoomTransition.Direction.Right; // Default direction
     } 
 
+    public IEnumerator GameOverAnimation(float timeToAnimate)
+    {
+        // rotate player 3 times across timeToAnimate
+        float rotateTime = Time.time + timeToAnimate;
+
+        for (int i = 0; i < 12; i++)
+        {
+            while (Time.time < rotateTime)
+            {
+                yield return null;
+            }
+
+            if (currentSprite.sprite == downIdle)
+            {
+                currentSprite.sprite = rightIdle;
+            }
+            else if (currentSprite.sprite == rightIdle)
+            {
+                currentSprite.sprite = upIdle;
+            }
+            else if (currentSprite.sprite == upIdle)
+            {
+                currentSprite.sprite = leftIdle;
+            }
+            else
+            {
+                currentSprite.sprite = downIdle;
+            }
+
+            rotateTime = Time.time + timeToAnimate;
+        }
+
+        currentSprite.sprite = downIdle;
+    }
 }

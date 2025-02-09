@@ -10,6 +10,7 @@ public class RoomClear : MonoBehaviour
 
     private int enemyCount = 0;
     private GameObject room;
+    private bool cleared = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,5 +58,12 @@ public class RoomClear : MonoBehaviour
         {
             lockedDoor.DoorUnlock();
         }
+
+        cleared = true;
+    }
+
+    public bool CheckIfCleared()
+    {
+        return cleared;
     }
 }

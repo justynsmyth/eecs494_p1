@@ -8,9 +8,8 @@ public class Portal : MonoBehaviour
     [SerializeField]
     private GameObject teleportTo; // PortalManager will set the value for us 
     public float portalCooldown = 0.5f;
-    public float offsetMagnitude = 2f;
-
-    private string direction;
+    public float offsetMagnitude = 1.5f;
+    
     private float timeOfTeleport;
     
     public GameObject portalPrefab;
@@ -53,6 +52,8 @@ public class Portal : MonoBehaviour
 
             Vector3 newPos = teleportTo.transform.position +
                              (teleportTo.GetComponent<Portal>().offset * offsetMagnitude);
+
+            Debug.Log(offsetMagnitude);
 
             if (teleportTo.GetComponent<Portal>().offset.y != 0) // align after teleporting to avoid clipping
             {

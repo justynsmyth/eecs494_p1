@@ -60,11 +60,11 @@ public class Inventory : MonoBehaviour
         Bomb bomb = Instantiate(WeaponPrefab).GetComponent<Bomb>();
         PortalGun portal_gun = Instantiate(WeaponPrefab).GetComponent<PortalGun>();
 
-        sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, ProjectileCooldown);
-        bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, this);
-        boomerang.Setup(BoomerangPrefab, ProjectileCooldown * 1.5f, gameObject); // boomerang needs longer to cooldown
-        bomb.Setup(BombPrefab, ProjectileCooldown, this);
-        portal_gun.Setup(PortalGunProjectilePrefab_Up, PortalGunProjectilePrefab_Down, PortalGunProjectilePrefab_Left, PortalGunProjectilePrefab_Right, ProjectileCooldown, this);
+        sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, ProjectileCooldown, swordSound, swordFullHPSound);
+        bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, bowSound, this);
+        boomerang.Setup(BoomerangPrefab, ProjectileCooldown * 1.5f, boomerangSound, gameObject); // boomerang needs longer to cooldown
+        bomb.Setup(BombPrefab, ProjectileCooldown, bombSound, this);
+        portal_gun.Setup(PortalGunProjectilePrefab_Up, PortalGunProjectilePrefab_Down, PortalGunProjectilePrefab_Left, PortalGunProjectilePrefab_Right, ProjectileCooldown, laserSound, this);
 
         weapons = new Dictionary<string, Weapons>
         {
@@ -212,32 +212,6 @@ public class Inventory : MonoBehaviour
 
         RoomTransition.Direction direction = playerAnimator.GetPlayerDirection();
         weapons[weaponName].Attack(transform.position, Quaternion.identity, direction);
-        
-        // TODO: bugfix this later, rough implementation
-        if (weaponName == "Sword")
-        {
-            AudioSource.PlayClipAtPoint(swordSound, Camera.main.transform.position);
-            if (GetComponent<HasHealth>().GetHealth() == GetComponent<HasHealth>().GetMaxHealth())
-            {
-                AudioSource.PlayClipAtPoint(swordFullHPSound, Camera.main.transform.position);
-            }
-        }
-        else if (weaponName == "Bow")
-        {
-            AudioSource.PlayClipAtPoint(bowSound, Camera.main.transform.position);
-        }
-        else if (weaponName == "Boomerang")
-        {
-            AudioSource.PlayClipAtPoint(boomerangSound, Camera.main.transform.position);
-        }
-        else if (weaponName == "Bomb")
-        {
-            AudioSource.PlayClipAtPoint(bombSound, Camera.main.transform.position);
-        }
-        else if (weaponName == "Portal Gun")
-        {
-            AudioSource.PlayClipAtPoint(laserSound, Camera.main.transform.position);
-        }
 
         yield return new WaitForSeconds(playerAnimator.attackAnimationDuration);
         PlayerInput.IsActionInProgress = false;

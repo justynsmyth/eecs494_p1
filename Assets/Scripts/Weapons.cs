@@ -9,6 +9,8 @@ public abstract class Weapons : MonoBehaviour
 
     public float CooldownDuration { get; set; }
     public bool IsOnCooldown { get; set; }
+    public AudioClip SoundClip { get; set; }
+    public AudioClip SoundClip2 { get; set; }
     public float Cooldown_Left { get; set; }
 
     public abstract void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction);

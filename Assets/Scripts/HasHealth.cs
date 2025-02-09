@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,7 @@ public class HasHealth : MonoBehaviour
     public bool IsInvulnerable = false;
     public bool player_iframes = false;
     private float playerControlLossTime = 0.25f;
+    private bool alive = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -64,15 +66,19 @@ public class HasHealth : MonoBehaviour
 
     void Update()
     {
-        if (health <= 0) 
+        if (health <= 0 && alive) 
         { 
+            alive = false;
             Vector3 position = gameObject.transform.position;
-            Destroy(gameObject);
 
             // if player dies, game over and restart the game
             if (gameObject.tag == "Player")
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                StartCoroutine(GameManager.instance.GameOver(gameObject));
+            }
+            else
+            {
+                Destroy(gameObject);
             }
 
             // if enemy dies, potentially drops an item
@@ -123,7 +129,6 @@ public class HasHealth : MonoBehaviour
 
     private IEnumerator PlayerIFrames()
     {
-        Debug.Log("Started being hit");
         PlayerInput player = gameObject.GetComponent<PlayerInput>();
         SpriteRenderer currentSprite = gameObject.GetComponent<SpriteRenderer>();
 
@@ -141,10 +146,8 @@ public class HasHealth : MonoBehaviour
             }
 
             timeElapsed += Time.deltaTime;
-            Debug.Log("Middle of being hit");
             yield return null;
         }
-        Debug.Log("Finished being hit");
         player_iframes = false;
         player.control = true;
         currentSprite.color = Color.white;

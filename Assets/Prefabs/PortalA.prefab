@@ -52,7 +52,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.64, y: 1.42, z: 0.2}
+  m_Size: {x: 1.5, y: 1.5, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-3917047320879104732
 MonoBehaviour:
@@ -70,5 +70,5 @@ MonoBehaviour:
   dest: {x: 0, y: 0, z: 0}
   teleportTo: {fileID: 0}
   portalCooldown: 0.5
-  offsetMagnitude: 2
+  offsetMagnitude: 1.5
   portalPrefab: {fileID: 5228417587477879601, guid: ae0f28b79528c43f596d53562c344f8f, type: 3}

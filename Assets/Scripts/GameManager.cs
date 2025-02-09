@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,10 +25,14 @@ public class GameManager : MonoBehaviour
     public Inventory inventory;
     public HasHealth player_health;
     public GameObject enemyPrefab;
-    
+    public AudioClip gameOverSound;
+    public AudioClip playerPopSound;
     
     public int maxEnemies = 2;
     public int enemies = 0;
+
+    public float gameOverPauseTime = 0.5f;
+    public float gameOverAnimateTime = 0.15f;
 
     private List<Vector3> usedSpawnLocations = new List<Vector3>();
 
@@ -43,6 +49,37 @@ public class GameManager : MonoBehaviour
         if (inventory == null) { Debug.LogError("inventory is null"); }
         if (rupee == null) { Debug.LogError("rupee is null"); }
         if (heart == null) { Debug.LogError("heart is null"); }
+    }
+
+    public IEnumerator GameOver(GameObject player)
+    {
+        GameObject.Find("Main Camera").GetComponent<AudioSource>().enabled = false;
+        god_mode = true;
+        player.GetComponent<PlayerInput>().enabled = false;
+        player.GetComponent<InputToAnimator>().ToggleMovement();
+        player.GetComponent<Rigidbody>().linearVelocity = Vector2.zero;
+
+        float startTime = Time.time;
+        while (Time.time - startTime < gameOverPauseTime)
+        {
+            yield return null;
+        }
+
+        AudioSource.PlayClipAtPoint(gameOverSound, Camera.main.transform.position);
+
+        yield return StartCoroutine(player.GetComponent<InputToAnimator>().GameOverAnimation(gameOverAnimateTime));
+
+        startTime = Time.time;
+        while (Time.time - startTime < gameOverPauseTime)
+        {
+            yield return null;
+        }
+
+        Destroy(player);
+        AudioSource.PlayClipAtPoint(playerPopSound, Camera.main.transform.position);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        god_mode = false;
     }
 
     public void DropItem(int index, Vector3 location, float itemDropRate)

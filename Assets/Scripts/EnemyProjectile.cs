@@ -18,7 +18,10 @@ public class EnemyProjectile : MonoBehaviour
         if (timeSinceAttack >= attackSpeed)
         {
             timeSinceAttack = 0;
-            Attack();
+            if (player != null)
+            {
+                Attack();
+            }
         }
     }
 
@@ -29,6 +32,7 @@ public class EnemyProjectile : MonoBehaviour
         GameObject projectile_down = Instantiate(projectile, transform.position, transform.rotation);
 
         Vector3 direction = AttackDirection(player.transform.position);
+
         projectile_normal.GetComponent<Rigidbody>().linearVelocity = direction * projectileSpeed;
 
         direction = AttackDirection(player.transform.position + (Vector3.up * projectileSpread));

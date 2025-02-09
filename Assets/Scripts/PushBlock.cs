@@ -18,6 +18,8 @@ public class PushBlock : MonoBehaviour
 
     public UnlockDoor door;
 
+    public RoomClear room;
+
     private bool isMoving = false;
     private bool isPushed = false;
 
@@ -38,6 +40,10 @@ public class PushBlock : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         if (isPushed) return;
+        if (room != null && !room.CheckIfCleared())
+        {
+            return;
+        }
         if (collision.gameObject.CompareTag("Player"))
         {
             if (Input.GetAxisRaw(pushType.ToString()) != 0 && !isMoving)
