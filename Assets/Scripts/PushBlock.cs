@@ -4,12 +4,14 @@ using System.Collections;
 public enum PushType
 {
     Vertical,
-    Horizontal
+    Horizontal,
 }
 public class PushBlock : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    private Collider col;
     public float transformMagnitude = 1f;
+    public bool bePushedInfinitely = false;
+    public bool isMultiDirectional = false;
 
     public PushType pushType;
     public float moveDuration = 0.05f;
@@ -23,10 +25,12 @@ public class PushBlock : MonoBehaviour
 
     private float holdTime = 0.0f;
     private Vector3 startPosition;
+    
+    public LayerMask blockLayer;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider>();
         startPosition = transform.position;
     }
 
@@ -37,21 +41,33 @@ public class PushBlock : MonoBehaviour
     }
     void OnCollisionStay(Collision collision)
     {
-        if (isPushed) return;
+        if (isMoving || isPushed) return;
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (Input.GetAxisRaw(pushType.ToString()) != 0 && !isMoving)
+            // get delta to current position (NEWS)
+            Vector3 inputDirection = GetInputDirection();
+
+            if (inputDirection != Vector3.zero)
             {
                 holdTime += Time.deltaTime;
 
-                if (holdTime >= moveDuration && transform.position == startPosition)
+                if (holdTime >= moveDuration || bePushedInfinitely)
                 {
-                    AudioSource.PlayClipAtPoint(pushAudio, Camera.main.transform.position);
-                    StartCoroutine(MoveBlock(Input.GetAxisRaw(pushType.ToString())));
+                    Vector3 newPosition = CalculateDirection(inputDirection, transformMagnitude);
 
-                    if (door != null)
+                    if (!IsMoveBlocked(newPosition, inputDirection))
                     {
-                        door.DoorUnlock();
+                        if (pushAudio != null)
+                        {
+                            AudioSource.PlayClipAtPoint(pushAudio, Camera.main.transform.position);
+                        }
+
+                        StartCoroutine(MoveBlock(inputDirection));
+
+                        if (door != null)
+                        {
+                            door.DoorUnlock();
+                        }
                     }
                 }
             }
@@ -61,22 +77,13 @@ public class PushBlock : MonoBehaviour
             }
         }
     }
-
-    private IEnumerator MoveBlock(float direction)
+    
+    private IEnumerator MoveBlock(Vector3 direction)
     {
         isMoving = true;
         PlayerInput.IsActionInProgress = true;
         Vector3 origin = transform.position;
-        Vector3 dest = origin;
-
-        if (pushType.ToString() == "Horizontal")
-        {
-            dest.x = dest.x + (direction * transformMagnitude);
-        }
-        else
-        {
-            dest.y = dest.y + (direction * transformMagnitude);
-        }
+        Vector3 dest = CalculateDirection(direction, transformMagnitude);
 
         float time = 0.0f;
         while (time < moveDuration)
@@ -87,9 +94,39 @@ public class PushBlock : MonoBehaviour
         }
 
         transform.position = dest;
-        isPushed = true;
+        if (!bePushedInfinitely) { isPushed = true;}
         isMoving = false;
         PlayerInput.IsActionInProgress = false;
+    }
+    
+    private Vector3 CalculateDirection(Vector3 deltaDirection, float magnitude)
+    {
+        Vector3 newPos = transform.position;
+        newPos += deltaDirection * magnitude;
+        return newPos;
+    }
+    
+    private Vector3 GetInputDirection()
+    {
+        float inputH = Input.GetAxisRaw("Horizontal");
+        float inputV = Input.GetAxisRaw("Vertical");
+        if (isMultiDirectional)
+        {
+            if (inputH != 0)
+            {
+                return Vector3.right * inputH;
+            }
+            if (inputV != 0)
+            {
+                return Vector3.up * inputV;
+            }
+            return new Vector3();
+        }
+        if (pushType == PushType.Vertical)
+        {
+            return Vector3.up * inputV;
+        }
+        return Vector3.right * inputH;
     }
     
     private IEnumerator ResetAfterDelay()
@@ -99,4 +136,51 @@ public class PushBlock : MonoBehaviour
         isPushed = false;
         holdTime = 0.0f; 
     }
+    
+    // Checks to see if block can successfully move without getting blocked by the following scenarios
+    // 1: Blocks with tags Wall or Doorway
+    // 2: Blocks defined as Block layer
+    // 3: If the player is in the way of the movement, we need to assure the player does not get crushed.
+    //   Checks the next tile to see if there is space for the player to move to
+    private bool IsMoveBlocked(Vector3 newPosition, Vector3 inputDirection)
+    {
+        if (CheckCollisions(newPosition)) 
+        { 
+            return true;
+        }
+        Collider[] potentialCollisions = Physics.OverlapBox(newPosition, col.bounds.extents, Quaternion.identity);
+        foreach (var hitCollider in potentialCollisions)
+        {
+            if (hitCollider.CompareTag("Player"))
+            {
+                Vector3 nextPosition = CalculateDirection(inputDirection, transformMagnitude * 2);
+                if (CheckCollisions(nextPosition))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private bool CheckCollisions(Vector3 position)
+    {
+        Collider[] requiredCollisions = Physics.OverlapBox(position, col.bounds.extents, Quaternion.identity);
+
+        foreach (var hitCollider in requiredCollisions)
+        {
+            if (hitCollider.CompareTag("Wall") || hitCollider.CompareTag("Doorway"))
+            {
+                return true;
+            }
+            if ((hitCollider.gameObject.layer == LayerMask.NameToLayer("Block") ||
+                hitCollider.gameObject.layer == LayerMask.NameToLayer("Water"))
+                && hitCollider.gameObject != gameObject)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
+
