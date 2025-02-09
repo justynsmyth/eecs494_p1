@@ -19,8 +19,6 @@ public class PlayerInput  : MonoBehaviour
     public static event Action OnSpacePressed;
     public static event Action OnXPressed;
     public static event Action OnZPressed;
-    public static event Action OnBPressed;
-    
     void Update()
     {
         if (control)
@@ -109,12 +107,7 @@ public class PlayerInput  : MonoBehaviour
         {
             OnZPressed?.Invoke();
         }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            OnXPressed?.Invoke();
-        }
-
+        
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             manager.CheatModeToggle();

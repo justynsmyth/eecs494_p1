@@ -168,3 +168,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portalA: {fileID: 2153844069623456252, guid: c1ccfe22d80e018468324ffff0c2bfb0, type: 3}
   portalB: {fileID: 671983262949678639, guid: e78a8189694307c439da4325d7a59c59, type: 3}
+  portalGun: {fileID: 0}

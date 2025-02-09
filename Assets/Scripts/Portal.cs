@@ -4,36 +4,21 @@ public class Portal : MonoBehaviour
 {
     public Vector3 offset;
     public Vector3 dest;
-    public GameObject teleportTo;
+
+    [SerializeField]
+    private GameObject teleportTo; // PortalManager will set the value for us 
     public float portalCooldown = 0.5f;
     public float offsetMagnitude = 2f;
 
     private string direction;
     private float timeOfTeleport;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (gameObject.name == "PortalB(Clone)")
-        {
-            teleportTo = GameObject.Find("PortalA(Clone)");
-        }
-        else if (gameObject.name == "PortalA(Clone)")
-        {
-            teleportTo = GameObject.Find("PortalB(Clone)");
-        }
-    }
+    
+    public GameObject portalPrefab;
 
     private void OnTriggerEnter(Collider other)
     {
         // check if a 2nd portal exists, then teleport player to that portal
-        if (teleportTo && (Time.time - timeOfTeleport >= portalCooldown))
+        if (teleportTo != null && (Time.time - timeOfTeleport >= portalCooldown))
         {
             Portal otherPortal = teleportTo.GetComponent<Portal>();
 
@@ -66,7 +51,19 @@ public class Portal : MonoBehaviour
             
             }
 
-            other.gameObject.transform.position = teleportTo.transform.position + (teleportTo.GetComponent<Portal>().offset * offsetMagnitude);
+            Vector3 newPos = teleportTo.transform.position +
+                             (teleportTo.GetComponent<Portal>().offset * offsetMagnitude);
+
+            if (teleportTo.GetComponent<Portal>().offset.y != 0) // align after teleporting to avoid clipping
+            {
+                newPos.y = Mathf.RoundToInt(newPos.y);
+            }
+            else // 
+            {
+                newPos.x = Mathf.RoundToInt(newPos.x);
+            }
+            
+            other.gameObject.transform.position = newPos;
             SetTimeOfTeleport();
             teleportTo.GetComponent<Portal>().SetTimeOfTeleport();
         }
@@ -99,5 +96,10 @@ public class Portal : MonoBehaviour
     public void SetTimeOfTeleport()
     {
         timeOfTeleport = Time.time;
+    }
+
+    public void SetTeleportTo(GameObject other)
+    {
+        teleportTo = other;
     }
 }

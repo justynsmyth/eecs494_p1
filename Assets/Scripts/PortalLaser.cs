@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -8,8 +10,8 @@ public class PortalLaser : MonoBehaviour
 
     public PortalGun portalGun;
 
-    public static bool portalAorB = false;
-
+    public static bool isNextPortalA = true; // spawns portal A first
+    
     private bool used = false;
     private GameObject portalToCreate;
 
@@ -20,22 +22,58 @@ public class PortalLaser : MonoBehaviour
         if ((collision.gameObject.layer == 0 || collision.gameObject.layer == 6) && !collision.gameObject.CompareTag("Doorway") &&!used)
         {
             Debug.Log("Collided with wall");
-            // create a portal
-            if (!portalAorB)
+
+            GameObject portalParent = isNextPortalA ? portalA : portalB;
+            Portal portalComponent = portalParent.GetComponent<Portal>();
+            
+            GameObject portalPrefab = portalComponent.portalPrefab;
+            
+            if (portalPrefab == null)
             {
-                portalToCreate = portalA;
-                portalAorB = true;
+                Debug.LogError("Portal prefab is not assigned in the portal script.");
+                return;
+            }
+
+            Vector2 v2Direction = gameObject.GetComponent<Projectile>().projectileDirection;
+
+            Quaternion rotation = new Quaternion();
+            Vector3 spawnPosition = collision.contacts[0].point;
+            if (v2Direction.y != 0)
+            {
+                spawnPosition.x = Mathf.RoundToInt(spawnPosition.x); // align portal to wall on X axis
+                if (v2Direction.y > 0) // if laser is moving upwards
+                {
+                    spawnPosition += new Vector3(0, 0.75f, 0);
+                }
+                else // if laser is moving downwards
+                {
+                    spawnPosition += new Vector3(0, -0.75f, 0);
+                }
             }
             else
             {
-                portalToCreate = portalB;
-                portalAorB = false;
+                spawnPosition.y = Mathf.RoundToInt(spawnPosition.y); // align portal to wall on Y axis
+                if (v2Direction.x > 0) // if laser is moving rightwards
+                {
+                    rotation = Quaternion.Euler(0, 0, -90); // Rotates the portal by 90 degrees when hitting L/R walls
+                    spawnPosition += new Vector3(0.75f, 0, 0);
+                }
+                else // if laser is moving leftwards
+                {
+                    rotation = Quaternion.Euler(0, 0, 90); // Rotates the portal by 90 degrees when hitting L/R walls
+                    spawnPosition += new Vector3(-0.75f, 0, 0);
+                    
+                }
             }
+            
+            GameObject newPortal = Instantiate(portalPrefab, spawnPosition, rotation);
 
-            GameObject newPortal = Instantiate(portalToCreate, collision.transform.position, Quaternion.identity);
             Portal newPortalScript = newPortal.GetComponent<Portal>();
             newPortalScript.offset = (gameObject.GetComponent<Projectile>().projectileDirection * -1).normalized;
+            
+            PortalManager.instance.RegisterPortal(newPortalScript, isNextPortalA); // inform PortalManager of portal
 
+            isNextPortalA = !isNextPortalA;
             used = true;
         }
         // this is if we hit another layer (i.e. doorways)
