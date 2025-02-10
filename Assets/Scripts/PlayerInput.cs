@@ -122,6 +122,7 @@ public class PlayerInput  : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
+            gameObject.transform.position = new Vector3(4f, 5f, 0f);
             SceneManager.LoadScene("customLevel");
         }
     }
