@@ -1,14 +1,14 @@
 "What is the pitch for your custom level? (2-3 sentences)"
-A. While maintaining a similar feel for the original game, we wanted to introduce each mechanic incrementally. Starting off without any portals, we have the players get used to the new buttons and companion cube usage before they dive into shooting the portal around to solve puzzles.
+A. While maintaining a similar feel for the original game, we wanted to introduce each mechanic incrementally. Starting off without any portals, we have the players get used to the new buttons and companion cube usage before they dive into shooting the portal around to solve puzzles. We felt a more linear progression without branching rooms was more fitting for our mechanic.
 
 "What is the pitch for your custom mechanic? (2-3 sentences)"
-B. We introduced Portals similar to the 2007 hit puzzle game 'Portal'. The player can use a portal gun to teleport across a room. With variety of button types and your companion cube, the player must strategize their way through the different rooms while being as clever as possible.
+B. We introduced Portals similar to the 2007 hit puzzle game 'Portal'. The player can use a portal gun to teleport across a room. With variety of button types and your companion cube, the player must strategize their way through different rooms while being as clever as possible.
 
 "How does your new mechanic / custom level change the way the game is played? (Think back to Mario 3D World, and how a switch-mechanic made a level have dangerous jumps, or how a timer made another level very hectic.")
-C. There are more spatial and temporal aspects to each action the player makes. The player must be able to place portals to avoid crowds of enemies, or find unique ways to solve puzzles where a portal is necessary to close far distances in a fast manner.
+C. There are more spatial and temporal aspects to each action the player makes. The player must be able to place portals to avoid crowds of enemies, or find unique ways to solve puzzles where a portal is necessary to close far distances in a fast manner. Maybe shooting an arrow straight may not be enough -- shooting it through a portal can change its trajectory!
 
 "What new interesting decisions does your new mechanic / custom level bring about?"
-D. It adds a more free and creative way of playing the game. It also makes each room feel more intricate in the placement of obstacles and blocks. The placements are designed to challenge the player to come up with solutions to passing into the neighboring room.
+D. It adds a more free and creative way of playing the game. It also makes each room feel more intricate in the placement of obstacles and blocks. The rooms are designed to challenge the player to come up with solutions using almost every tile in the playable space.
 
 "How do you explain the new mechanic to the player (or make its utility obvious) while they are playing without using a bunch of clumsy text? (Assume that players will ignore any text that is more than a few words long)"
 E. By focusing on a particular mechanic, the player does not feel overwhelmed. For example, the first couple of rooms purposefully keeps enemies to a minimum while allowing the player to figure out how the companion cube coordinates with button tiles to open passageways into new rooms.
