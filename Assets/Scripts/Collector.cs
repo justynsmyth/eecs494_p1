@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Collector : MonoBehaviour
@@ -140,6 +141,7 @@ public class Collector : MonoBehaviour
 
         PlayerInput playerControl = GetComponent<PlayerInput>();
         playerControl.control = false;
+        GameManager.god_mode = true;
         GetComponent<Rigidbody>().linearVelocity = Vector2.zero;
 
         playerSprite.sprite = weaponPickupSprite;
@@ -156,6 +158,7 @@ public class Collector : MonoBehaviour
         playerSprite.sprite = currentSprite;
         GetComponent<InputToAnimator>().ToggleMovement();
         playerControl.control = true;
+        GameManager.god_mode = false;
 
         Destroy(item);
     }

@@ -17,6 +17,7 @@ TagManager:
   - Wall
   - Doorway
   - CompanionBlock
+  - Obstacle
   layers:
   - Default
   - TransparentFX
