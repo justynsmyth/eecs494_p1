@@ -1,3 +1,12 @@
+Enemy sprites by MisterMike at https://www.spriters-resource.com/nes/legendofzelda/sheet/31806/
+Aquamentus sprites by MisterMike at https://www.spriters-resource.com/NES/legendofzelda/sheet/36632/
+Bow Room and Old Man Room found at https://nesmaps.com/maps/Zelda/ZeldaLevel1Q1.html
+
+Laser projectile sound effect found at https://pixabay.com/sound-effects/laser-45816/ 
+Portal sound effect found at https://pixabay.com/sound-effects/ocean-wave-really-fast-236008/
 Companion Cube Reference: https://www.pixilart.com/art/portal-companion-cube-8a3d121e9952001
 Portal Reference: https://cleanpng.com/png-portal-video-game-film-column-sprite-5506003/
 
+
+Custom mechanics inspired by Portal 2 by Valve
+Rest of the custom mechanic sprites made by Caiden Fung and Justin Smith
