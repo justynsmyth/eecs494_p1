@@ -17,10 +17,13 @@ public class UnlockDoor : MonoBehaviour
 
     private Inventory player_inventory;
     private bool locked = true;
+    private LayerMask layers;
 
     private void Start()
     {
         player_inventory = GameObject.FindWithTag("Player").GetComponent<Inventory>();
+
+        layers = gameObject.GetComponent<BoxCollider>().excludeLayers;
     }
 
     void Update()
@@ -66,7 +69,8 @@ public class UnlockDoor : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().sprite = closedDoorSprite;
             gameObject.GetComponent<BoxCollider>().center = closedDoor.GetComponent<BoxCollider>().center;
             gameObject.GetComponent<BoxCollider>().size = closedDoor.GetComponent<BoxCollider>().size;
-            gameObject.GetComponent<BoxCollider>().excludeLayers = new LayerMask();
+            gameObject.GetComponent<BoxCollider>().excludeLayers = layers;
+            AudioSource.PlayClipAtPoint(openDoorSound, Camera.main.transform.position);
             locked = true;
         }
     }

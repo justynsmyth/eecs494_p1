@@ -125,6 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   door: {fileID: 0}
   isANDType: 0
+  isProjectileType: 1
   otherButtonTile: {fileID: 0}
   closeDelay: 0.5
 --- !u!54 &-3140856533662791902

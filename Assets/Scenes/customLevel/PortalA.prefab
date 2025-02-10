@@ -72,7 +72,7 @@ MonoBehaviour:
   teleportTo: {fileID: 0}
   portalCooldown: 0.5
   offsetMagnitude: 1.5
-  portalPrefab: {fileID: 5228417587477879601, guid: 37358ab2c4dce2f47bbf5e2172a4b629, type: 3}
+  portalTravelSound: {fileID: 8300000, guid: ddba581c955ba8145bee9eb33761fdd2, type: 3}
 --- !u!212 &7529145744263794981
 SpriteRenderer:
   m_ObjectHideFlags: 0

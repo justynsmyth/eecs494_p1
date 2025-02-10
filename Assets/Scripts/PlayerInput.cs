@@ -117,6 +117,11 @@ public class PlayerInput  : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             manager.CheatModeToggle();
-        } 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            manager.CheatModeToggle();
+        }
     }
 }
