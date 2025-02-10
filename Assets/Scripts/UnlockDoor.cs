@@ -67,6 +67,7 @@ public class UnlockDoor : MonoBehaviour
             gameObject.GetComponent<BoxCollider>().center = closedDoor.GetComponent<BoxCollider>().center;
             gameObject.GetComponent<BoxCollider>().size = closedDoor.GetComponent<BoxCollider>().size;
             gameObject.GetComponent<BoxCollider>().excludeLayers = new LayerMask();
+            AudioSource.PlayClipAtPoint(openDoorSound, Camera.main.transform.position);
             locked = true;
         }
     }

@@ -9,15 +9,23 @@ public class Portal : MonoBehaviour
     private GameObject teleportTo; // PortalManager will set the value for us 
     public float portalCooldown = 0.5f;
     public float offsetMagnitude = 1.5f;
+
+    public AudioClip portalTravelSound;
     
     private float timeOfTeleport;
     
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Obstacle"))
+        {
+            return;
+        }
         // check if a 2nd portal exists, then teleport player to that portal
         if (teleportTo != null && (Time.time - timeOfTeleport >= portalCooldown))
         {
             Portal otherPortal = teleportTo.GetComponent<Portal>();
+
+            AudioSource.PlayClipAtPoint(portalTravelSound, Camera.main.transform.position);
 
             // weapon projectiles should hit portal and come out on the correct direction
             if (other.gameObject.CompareTag("Weapon"))
@@ -41,11 +49,6 @@ public class Portal : MonoBehaviour
             else if (1 == 0)
             {
                 // do stuff
-            }
-            // this is for Player/Enemy gameObjects
-            else
-            {
-            
             }
 
             Vector3 newPos = teleportTo.transform.position +

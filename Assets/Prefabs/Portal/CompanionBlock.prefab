@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7052043747609231334}
   - component: {fileID: 6980527031277389989}
   - component: {fileID: 6902445458206853748}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: CompanionBlock
   m_TagString: CompanionBlock
   m_Icon: {fileID: 0}
