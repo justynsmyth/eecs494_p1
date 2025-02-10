@@ -14,6 +14,12 @@ public class PlayerInput  : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        manager = GameManager.instance;
+    }
+
+    private void OnEnable()
+    {
+        manager = GameManager.instance;
     }
 
     public static event Action OnSpacePressed;

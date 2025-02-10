@@ -27,8 +27,6 @@ public class RoomClear : MonoBehaviour
                 }
             }
         }
-
-        Debug.Log("number of enemies: " + enemyCount);
     }
 
     // Update is called once per frame

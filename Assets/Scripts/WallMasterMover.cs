@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WallMasterMover : MonoBehaviour
 {
     private Vector3 moveDirection;
     private Vector3 turnDir;
     private Vector3 initDir;
+    private Vector3 initLocation;
     private float speed;
 
     private int moveSteps;
@@ -26,6 +29,7 @@ public class WallMasterMover : MonoBehaviour
         initDir = initDirection.normalized;
         turnDir = turnDirection.normalized;
         speed = moveSpeed;
+        initLocation = transform.position;
 
         moveDirection = initDir; // Start moving in the initial direction
         moveSteps = 1;
@@ -68,7 +72,6 @@ public class WallMasterMover : MonoBehaviour
         else if (movementPhase == 2 && distanceMoved >= moveSteps * stepSize)
         {
             isMoving = false;
-            GameManager.instance.enemies -= 1;
             TeleportPlayer();
         }
     }
@@ -110,6 +113,12 @@ public class WallMasterMover : MonoBehaviour
                 rb.isKinematic = false; // Make it non-kinematic again
             }
         }
-        Destroy(gameObject);
+        if (gameObject != null) Destroy(gameObject);
+        GameManager.instance.usedSpawnLocations.Remove(initLocation);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.instance.enemies -= 1;
     }
 }

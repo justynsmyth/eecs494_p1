@@ -48,17 +48,37 @@ public class Inventory : MonoBehaviour
 
     private Dictionary<string, Weapons> weapons;
     
+    public static Inventory instance { get; private set; }
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject); // Only allow one instance of Inventory
+        }
+    }
     
     // When adding Weapons, Instantiate their component here
     // Then add them to the weapons dictionary
     void Start()
     {
+        InitializeWeapons();
+    }
+    
+    public void InitializeWeapons()
+    {
         playerAnimator = GetComponent<InputToAnimator>();
-        Sword sword = Instantiate(WeaponPrefab).GetComponent<Sword>();
-        Bow bow = Instantiate(WeaponPrefab).GetComponent<Bow>();
-        Boomerang boomerang = Instantiate(WeaponPrefab).GetComponent<Boomerang>();
-        Bomb bomb = Instantiate(WeaponPrefab).GetComponent<Bomb>();
-        PortalGun portal_gun = Instantiate(WeaponPrefab).GetComponent<PortalGun>();
+        GameObject weaponPrefab = Instantiate(WeaponPrefab);
+        Sword sword = weaponPrefab.GetComponent<Sword>();
+        Bow bow = weaponPrefab.GetComponent<Bow>();
+        Boomerang boomerang = weaponPrefab.GetComponent<Boomerang>();
+        Bomb bomb = weaponPrefab.GetComponent<Bomb>();
+        PortalGun portal_gun = weaponPrefab.GetComponent<PortalGun>();
 
         sword.Setup(swordProjectilePrefab_Up, swordProjectilePrefab_Down, swordProjectilePrefab_Left, swordProjectilePrefab_Right, ProjectileCooldown, swordSound, swordFullHPSound);
         bow.Setup(ArrowProjectilePrefab_Up, ArrowProjectilePrefab_Down, ArrowProjectilePrefab_Left, ArrowProjectilePrefab_Right, ProjectileCooldown, bowSound, this);
@@ -73,7 +93,7 @@ public class Inventory : MonoBehaviour
             { "Bomb", bomb},
             { "Boomerang", boomerang },
             { "Portal Gun", portal_gun }
-        }; 
+        };
     }
 
     public void AddRupees(int num_rupees)
@@ -98,6 +118,13 @@ public class Inventory : MonoBehaviour
         {
             bomb_count += num_bombs;
         }
+    }
+
+    public void ResetAllItems()
+    {
+        key_count = 0;
+        bomb_count = 0;
+        rupee_count = 0;
     }
 
     public void ResetPortals()
@@ -184,6 +211,12 @@ public class Inventory : MonoBehaviour
     }
 
     void OnDisable()
+    {
+        PlayerInput.OnXPressed -= () => UseWeapon(currentXSlotItem);
+        PlayerInput.OnZPressed -= () => UseWeapon(currentZSlotItem);
+        PlayerInput.OnSpacePressed -= SwapZSlotItem;
+    }
+    void OnDestroy()
     {
         PlayerInput.OnXPressed -= () => UseWeapon(currentXSlotItem);
         PlayerInput.OnZPressed -= () => UseWeapon(currentZSlotItem);

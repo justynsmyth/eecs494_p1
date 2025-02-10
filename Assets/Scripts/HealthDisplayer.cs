@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HealthDisplayer : MonoBehaviour
 {
@@ -11,10 +13,25 @@ public class HealthDisplayer : MonoBehaviour
     {
         text_component = GetComponent<TextMeshProUGUI>();
     }
+    
+    void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded");
+        playerHealth = GameObject.FindWithTag("Player").GetComponent<HasHealth>();
+    }
 
     // Update is called once per frame
     void Update()
     {
+        if (playerHealth == null)
+        {
+            playerHealth = GameObject.FindWithTag("Player").GetComponent<HasHealth>();
+        }
         // If our inventory and text component exist, set the text to number of rupees we have
         if (playerHealth && text_component)
         {

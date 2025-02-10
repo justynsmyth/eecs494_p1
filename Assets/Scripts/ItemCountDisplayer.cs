@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ItemCountDisplayer : MonoBehaviour
 {
@@ -12,10 +13,19 @@ public class ItemCountDisplayer : MonoBehaviour
     {
         text_component = GetComponent<TextMeshProUGUI>();
     }
+    void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode){
+        inventory = Inventory.instance;
+    }
 
     // Update is called once per frame
     void Update()
     {
+        if (inventory == null) inventory = Inventory.instance;
         // If our inventory and text component exist, set the text to number of rupees we have
         if (inventory && text_component && item_to_display == "rupees")
         {

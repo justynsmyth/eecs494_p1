@@ -12,12 +12,24 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
     }
+    
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    
     public GameObject rupee;
     public GameObject heart;
     public GameObject key;
@@ -27,6 +39,9 @@ public class GameManager : MonoBehaviour
     public GameObject enemyPrefab;
     public AudioClip gameOverSound;
     public AudioClip playerPopSound;
+    public PlayerInput playerInput;
+    public Vector3 originCameraPos = new Vector3(39.5f, 7f, -10f);
+    public Vector3 originPlayerPos = new Vector3(39.5f, 2f, 0f);
     
     public int maxEnemies = 2;
     public int enemies = 0;
@@ -34,7 +49,7 @@ public class GameManager : MonoBehaviour
     public float gameOverPauseTime = 0.5f;
     public float gameOverAnimateTime = 0.15f;
 
-    private List<Vector3> usedSpawnLocations = new List<Vector3>();
+    public List<Vector3> usedSpawnLocations = new List<Vector3>();
 
     public static bool god_mode = false;
 
@@ -46,7 +61,18 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("player_health is null");
         }
-        if (inventory == null) { Debug.LogError("inventory is null"); }
+
+        if (inventory == null)
+        {
+            inventory = FindObjectOfType<Inventory>();
+            if (inventory == null) Debug.LogError("inventory is null");
+        }
+        
+        if (player_health == null)
+        {
+            player_health = GameObject.FindWithTag("Player").GetComponent<HasHealth>();
+            if (player_health == null) Debug.LogError("player_health is null");
+        }
         if (rupee == null) { Debug.LogError("rupee is null"); }
         if (heart == null) { Debug.LogError("heart is null"); }
     }
@@ -75,11 +101,51 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        Destroy(player);
         AudioSource.PlayClipAtPoint(playerPopSound, Camera.main.transform.position);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         god_mode = false;
+        StartCoroutine(ReenablePlayerInputAfterLoad());
+    }
+    
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            player_health = player.GetComponent<HasHealth>();
+            playerInput = player.GetComponent<PlayerInput>();
+            inventory = player.GetComponent<Inventory>();
+            inventory.ResetAllItems();
+            inventory.InitializeWeapons();
+
+            // Re-enable PlayerInput after scene reload
+            if (playerInput != null)
+            {
+                playerInput.enabled = true;
+            }
+        }
+    }
+    
+    IEnumerator ReenablePlayerInputAfterLoad()
+    {
+        yield return new WaitForSeconds(0.2f); // Wait a frame to ensure scene reloads
+        
+        Camera mainCamera = Camera.main;
+        mainCamera.transform.position = originCameraPos;
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            PlayerInput playerInput = player.GetComponent<PlayerInput>();
+            if (playerInput != null)
+            {
+                player.GetComponent<HasHealth>().MaximizeHealth();
+                player.transform.position = originPlayerPos;
+                playerInput.enabled = true; // Re-enable input after scene reload
+                playerInput.manager = this;
+            }
+            player.GetComponent<InputToAnimator>().ToggleMovement();
+        }
     }
 
     public void DropItem(int index, Vector3 location, float itemDropRate)
@@ -100,6 +166,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    
     
     public bool SpawnEnemy(Vector3 spawnLocation, Vector3 initDirection, Vector3 turnDirection, float speed)
     {

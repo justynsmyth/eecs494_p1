@@ -40,7 +40,11 @@ public class ChangeHealthOnTouch : MonoBehaviour
         else if (other.gameObject.CompareTag("Weapon") && gameObject.CompareTag("Enemy"))
         {
             if (enemyHealth.IsInvulnerable) return;
-            GetComponent<EnemyMovement>().stopMovement = false; // if player hits, enemy regains control (if stunned)
+            EnemyMovement enemyMovement = GetComponent<EnemyMovement>();
+            if (enemyMovement != null)
+            {
+                enemyMovement.stopMovement = false; // if player hits, enemy regains control (if stunned)
+            }
             StartCoroutine(enemyHealth.InvulnerabilityCooldown());
             HandleHealthAndKnockback(other, selfCollider, healthDamagedOnTouch);
         }
