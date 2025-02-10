@@ -10,6 +10,10 @@ public class Button : MonoBehaviour
     public bool isProjectileType = false;
     public GameObject otherButtonTile; // used if isANDType
     private Button otherButton;
+
+    public GameObject otherButtonTile2;
+    private Button otherButton2;
+
     public float closeDelay = 0.5f;
 
     private bool isTriggered = false;
@@ -26,6 +30,10 @@ public class Button : MonoBehaviour
             else
             {
                 otherButton = otherButtonTile.GetComponent<Button>();
+                if (otherButton2 != null)
+                {
+                    otherButton2 = otherButtonTile2.GetComponent<Button>();
+                }
             }
         }
     }
@@ -40,7 +48,17 @@ public class Button : MonoBehaviour
             {
                 if (otherButton != null && otherButton.isTriggered)
                 {
-                    door.DoorUnlock();
+                    if (otherButton2 != null)
+                    {
+                        if (otherButton2.isTriggered)
+                        {
+                            door.DoorUnlock();
+                        }
+                    }
+                    else
+                    {
+                        door.DoorUnlock();
+                    }
                 }
             }
             else
@@ -51,7 +69,11 @@ public class Button : MonoBehaviour
         {
             if (!isProjectileType) return;
             isTriggered = true;
-            door.DoorUnlock();
+
+            if (door != null)
+            {
+                door.DoorUnlock();
+            }
         }
     }
 
