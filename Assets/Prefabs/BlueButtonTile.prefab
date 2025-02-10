@@ -124,6 +124,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   door: {fileID: 0}
+  isANDType: 0
+  otherButtonTile: {fileID: 0}
+  closeDelay: 0.5
 --- !u!54 &8478544309603575936
 Rigidbody:
   m_ObjectHideFlags: 0
