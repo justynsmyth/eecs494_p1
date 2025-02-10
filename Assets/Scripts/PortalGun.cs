@@ -19,6 +19,7 @@ public class PortalGun : Weapons
 
     public override void Attack(Vector3 position, Quaternion rotation, RoomTransition.Direction direction)
     {
+        Debug.Log($"Number of portals {numPortals}");
         Portal portalA = PortalManager.instance.GetPortalA();
         Portal portalB = PortalManager.instance.GetPortalB();
         if (portalA != null && portalB != null)
@@ -54,7 +55,7 @@ public class PortalGun : Weapons
     {
         if (!IsOnCooldown && numPortals < 2)
         {
-            animator.HandleBowAnimation();
+            animator.HandlePortalAnimation();
         }
         else
         {
@@ -65,5 +66,6 @@ public class PortalGun : Weapons
     public void SetNumPortals(int num)
     {
         numPortals += num;
+        numPortals = Mathf.Max(0, numPortals);
     }
 }

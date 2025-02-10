@@ -37,11 +37,18 @@ public class PortalManager : MonoBehaviour
     public Portal GetPortalB() => portalB;
     public void DestroyPortals()
     {
-        portalA.SetTeleportTo(null);
-        portalB.SetTeleportTo(null);
-        if (portalA != null) Destroy(portalA.gameObject);
-        if (portalB != null) Destroy(portalB.gameObject);
-        portalA = null;
-        portalB = null;
+        if (portalA != null)
+        {
+            portalA.SetTeleportTo(null);
+            Destroy(portalA.gameObject);
+            portalA = null;
+        }
+        if (portalB != null)
+        {
+            portalB.SetTeleportTo(null);
+            Destroy(portalB.gameObject);
+            portalB = null;
+        }
+        GameManager.instance.inventory.ResetPortals();
     }
 }

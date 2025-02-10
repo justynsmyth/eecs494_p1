@@ -24,6 +24,11 @@ public class InputToAnimator : MonoBehaviour
     public Sprite downBowAttack;
     public Sprite leftBowAttack;
     public Sprite rightBowAttack;
+    
+    public Sprite upPortalAttack;
+    public Sprite downPortalAttack;
+    public Sprite leftPortalAttack;
+    public Sprite rightPortalAttack;
 
     public float moveRate = 0.15f;
     public float attackAnimationDuration = 0.25f;
@@ -49,24 +54,28 @@ public class InputToAnimator : MonoBehaviour
             { rightIdle, RoomTransition.Direction.Right },
             { rightAttack, RoomTransition.Direction.Right },
             { rightBowAttack, RoomTransition.Direction.Right },
+            { rightPortalAttack, RoomTransition.Direction.Right},
 
             // Left direction sprites
             { leftMoving, RoomTransition.Direction.Left },
             { leftIdle, RoomTransition.Direction.Left },
             { leftAttack, RoomTransition.Direction.Left },
             { leftBowAttack, RoomTransition.Direction.Left },
+            { leftPortalAttack, RoomTransition.Direction.Left},
 
             // Up direction sprites
             { upMoving, RoomTransition.Direction.Up },
             { upIdle, RoomTransition.Direction.Up },
             { upAttack, RoomTransition.Direction.Up },
             { upBowAttack, RoomTransition.Direction.Up },
+            { upPortalAttack, RoomTransition.Direction.Up},
 
             // Down direction sprites
             { downMoving, RoomTransition.Direction.Down },
             { downIdle, RoomTransition.Direction.Down },
             { downAttack, RoomTransition.Direction.Down },
             { downBowAttack, RoomTransition.Direction.Down },
+            { downPortalAttack, RoomTransition.Direction.Down },
         };
     }
 
@@ -169,6 +178,24 @@ public class InputToAnimator : MonoBehaviour
             RoomTransition.Direction.Down => downBowAttack,
             RoomTransition.Direction.Left => leftBowAttack,
             RoomTransition.Direction.Right => rightBowAttack,
+            _ => rightBowAttack
+        };
+
+        StartCoroutine(ResetSpriteAfterAttack(previousSprite));
+    }
+    
+    public void HandlePortalAnimation()
+    {
+        Sprite previousSprite = currentSprite.sprite;
+
+        RoomTransition.Direction direction = GetPlayerDirection();
+
+        currentSprite.sprite = direction switch
+        {
+            RoomTransition.Direction.Up => upPortalAttack,
+            RoomTransition.Direction.Down => downPortalAttack,
+            RoomTransition.Direction.Left => leftPortalAttack,
+            RoomTransition.Direction.Right => rightPortalAttack,
             _ => rightBowAttack
         };
 

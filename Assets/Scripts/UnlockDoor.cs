@@ -1,3 +1,4 @@
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class UnlockDoor : MonoBehaviour
@@ -6,6 +7,9 @@ public class UnlockDoor : MonoBehaviour
     public Sprite openDoorSprite;
     public AudioClip openDoorSound;
 
+    public Sprite closedDoorSprite;
+    public GameObject closedDoor;
+    
     public bool verticalDoor;
     public GameObject otherDoor;
     public bool removeKey = true;
@@ -51,6 +55,19 @@ public class UnlockDoor : MonoBehaviour
                 player_inventory.AddKeys(-1);
                 removeKey = false;
             }
+        }
+    }
+
+    public void DoorLock()
+    {
+        if (closedDoor == null || closedDoorSprite == null) return;
+        if (!locked)
+        {
+            gameObject.GetComponent<SpriteRenderer>().sprite = closedDoorSprite;
+            gameObject.GetComponent<BoxCollider>().center = closedDoor.GetComponent<BoxCollider>().center;
+            gameObject.GetComponent<BoxCollider>().size = closedDoor.GetComponent<BoxCollider>().size;
+            gameObject.GetComponent<BoxCollider>().excludeLayers = new LayerMask();
+            locked = true;
         }
     }
 

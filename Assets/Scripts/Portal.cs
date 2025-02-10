@@ -12,8 +12,6 @@ public class Portal : MonoBehaviour
     
     private float timeOfTeleport;
     
-    public GameObject portalPrefab;
-
     private void OnTriggerEnter(Collider other)
     {
         // check if a 2nd portal exists, then teleport player to that portal
@@ -59,7 +57,7 @@ public class Portal : MonoBehaviour
             {
                 newPos.y = Mathf.RoundToInt(newPos.y);
             }
-            else // 
+            else
             {
                 newPos.x = Mathf.RoundToInt(newPos.x);
             }

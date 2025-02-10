@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6902445458206853748}
   m_Layer: 0
   m_Name: CompanionBlock
-  m_TagString: Untagged
+  m_TagString: CompanionBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 34.002758, y: 2.9963107, z: 0}
-  m_LocalScale: {x: 1.9098113, y: 1.9405875, z: 1}
+  m_LocalScale: {x: 1.9, y: 1.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -129,6 +129,4 @@ MonoBehaviour:
   moveDuration: 0.5
   pushAudio: {fileID: 0}
   door: {fileID: 0}
-  blockLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  room: {fileID: 0}

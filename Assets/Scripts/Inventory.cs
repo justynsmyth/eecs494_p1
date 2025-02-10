@@ -100,6 +100,18 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void ResetPortals()
+    {
+        if (weapons.TryGetValue("Portal Gun", out Weapons weapon))
+        {
+            PortalGun portalGun = weapon as PortalGun;
+            if (portalGun != null)
+            {
+                portalGun.SetNumPortals(-2);
+            }
+        }
+    }
+
     public void MaximizeResources()
     {
         rupee_count = max_inventory_value;

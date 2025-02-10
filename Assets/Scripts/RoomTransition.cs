@@ -91,6 +91,7 @@ public class RoomTransition : MonoBehaviour
     private IEnumerator TransitionCameraAndMovePlayer(Direction moveDirection, GameObject player)
     {
         isTransitionInProgress = true;
+        PortalManager.instance.DestroyPortals();
         player.GetComponent<SpriteRenderer>().enabled = false;
         Vector3 startPos = cam.transform.position;
         Vector3 endPos = startPos + GetDirectionVector(moveDirection);

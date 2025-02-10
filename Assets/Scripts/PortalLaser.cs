@@ -7,7 +7,7 @@ public class PortalLaser : MonoBehaviour
 {
     public GameObject portalA;
     public GameObject portalB;
-
+    
     public PortalGun portalGun;
 
     public static bool isNextPortalA = true; // spawns portal A first
@@ -24,15 +24,6 @@ public class PortalLaser : MonoBehaviour
             Debug.Log("Collided with wall");
 
             GameObject portalParent = isNextPortalA ? portalA : portalB;
-            Portal portalComponent = portalParent.GetComponent<Portal>();
-            
-            GameObject portalPrefab = portalComponent.portalPrefab;
-            
-            if (portalPrefab == null)
-            {
-                Debug.LogError("Portal prefab is not assigned in the portal script.");
-                return;
-            }
 
             Vector2 v2Direction = gameObject.GetComponent<Projectile>().projectileDirection;
 

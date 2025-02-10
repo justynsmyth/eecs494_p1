@@ -16,6 +16,7 @@ TagManager:
   - portal gun
   - Wall
   - Doorway
+  - CompanionBlock
   layers:
   - Default
   - TransparentFX
@@ -33,7 +34,7 @@ TagManager:
   - Trap
   - EnemyAttack
   - PortalLaser
-  - 
+  - IgnoreLaser
   - 
   - 
   - 
