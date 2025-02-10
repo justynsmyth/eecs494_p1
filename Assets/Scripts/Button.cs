@@ -8,18 +8,14 @@ public class Button : MonoBehaviour
     public UnlockDoor door;
     public bool isANDType = false;
     public bool isProjectileType = false;
-    public GameObject otherButtonTile; // used if isANDType
+    public GameObject otherButtonTile; // used if isANDTypeq
     private Button otherButton;
-
-    public GameObject otherButtonTile2;
-    private Button otherButton2;
 
     public float closeDelay = 0.5f;
 
     private bool isTriggered = false;
     void Start()
     {
-        if (door == null) Debug.LogError("door is null. Set in inspector!");
         if (isANDType)
         {
             isProjectileType = false; // Just in case both are turned on
@@ -30,10 +26,6 @@ public class Button : MonoBehaviour
             else
             {
                 otherButton = otherButtonTile.GetComponent<Button>();
-                if (otherButton2 != null)
-                {
-                    otherButton2 = otherButtonTile2.GetComponent<Button>();
-                }
             }
         }
     }
@@ -48,29 +40,27 @@ public class Button : MonoBehaviour
             {
                 if (otherButton != null && otherButton.isTriggered)
                 {
-                    if (otherButton2 != null)
-                    {
-                        if (otherButton2.isTriggered)
-                        {
-                            door.DoorUnlock();
-                        }
-                    }
-                    else
-                    {
-                        door.DoorUnlock();
-                    }
+                    door.DoorUnlock();
                 }
             }
             else
             {
                 door.DoorUnlock();
             }
-        } else if (other.CompareTag("Weapon") | other.CompareTag("boomerang"))
+        } if (other.CompareTag("Weapon") | other.CompareTag("boomerang"))
         {
             if (!isProjectileType) return;
             isTriggered = true;
+            Debug.Log(gameObject.name + " is currently triggered");
 
-            if (door != null)
+            if (isANDType)
+            {
+                if (otherButton != null && otherButton.isTriggered)
+                {
+                    door.DoorUnlock();
+                }
+            }
+            else if (door != null)
             {
                 door.DoorUnlock();
             }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerInput  : MonoBehaviour
 {
@@ -121,7 +122,7 @@ public class PlayerInput  : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            manager.CheatModeToggle();
+            SceneManager.LoadScene("customLevel");
         }
     }
 }

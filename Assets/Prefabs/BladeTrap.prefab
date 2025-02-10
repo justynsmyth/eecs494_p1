@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4704684194639221837}
   - component: {fileID: 6436733015840578254}
   - component: {fileID: 668243983787136709}
-  - component: {fileID: 1985080891408590744}
   - component: {fileID: 2237765553448866928}
   - component: {fileID: 6880440320214712212}
   - component: {fileID: 1032257906598042614}
@@ -119,27 +118,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!65 &1985080891408590744
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4932729424966042205}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 512
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9375, y: 1, z: 0.2}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &2237765553448866928
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -190,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28de51c6c752e924da21fbe60018da1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayLength: 10
-  horizontalDistance: 5
-  verticalDistance: 2.5
+  rayLength: 1
+  horizontalDistance: 1
+  verticalDistance: 0
   speed: 5
