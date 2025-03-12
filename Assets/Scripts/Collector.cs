@@ -96,7 +96,7 @@ public class Collector : MonoBehaviour
 
             if (inventory)
             {
-                inventory.AddBomb(1);
+                inventory.AddBomb(4);
                 inventory.UpdateZSlotItem("Bomb");
             }
             

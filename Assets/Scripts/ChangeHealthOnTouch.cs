@@ -23,7 +23,6 @@ public class ChangeHealthOnTouch : MonoBehaviour
     {
         Collider selfCollider = GetComponent<Collider>();
         HasHealth enemyHealth = gameObject.GetComponent<HasHealth>();
-
         // if Player is collided with and in god mode, do nothing
         if (other.gameObject.CompareTag("Player"))
         {
@@ -39,6 +38,7 @@ public class ChangeHealthOnTouch : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Weapon") && gameObject.CompareTag("Enemy"))
         {
+            Debug.Log("Collided with Weapon!");
             if (enemyHealth.IsInvulnerable) return;
             EnemyMovement enemyMovement = GetComponent<EnemyMovement>();
             if (enemyMovement != null)

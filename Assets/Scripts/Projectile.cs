@@ -27,6 +27,14 @@ public class Projectile : MonoBehaviour
         }
         else
         {
+            Debug.Log(collision.collider.name);
+            if (collision.collider.name == "Gel")
+            {
+                ChangeHealthOnTouch healthChange = collision.collider.GetComponent<ChangeHealthOnTouch>();
+                
+                if (healthChange != null)
+                    healthChange.OnTriggerEnter(GetComponent<Collider>());
+            }
             TriggerImpactAction(projectileLifeTime);
             HideProjectile();
             Destroy(gameObject, projectileLifeTime + 0.1f);

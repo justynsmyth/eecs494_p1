@@ -160,8 +160,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.75, y: 0.75, z: 0.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.52404404, y: 0.52540207, z: 0.2}
+  m_Center: {x: 0.00067710876, y: 0, z: 0}
 --- !u!114 &3442894356511509799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +177,7 @@ MonoBehaviour:
   health: 1
   itemDropRate: 0.4
   room: {fileID: 0}
+  stunDuration: 3
   damageAudio: {fileID: 8300000, guid: 2570c7a86d14030469e2898b5a81738c, type: 3}
   invulnerability_duration: 1
   IsInvulnerable: 0
@@ -197,10 +198,7 @@ MonoBehaviour:
   healthDamagedOnTouch: -1
   knockback_power: 3.5
   destroy_self_on_touch: 0
-  invulnerability_duration: 1
   ignoreBoomerang: 0
-  stunDuration: 3
-  IsInvulnerable: 0
 --- !u!114 &1673509646348394013
 MonoBehaviour:
   m_ObjectHideFlags: 0

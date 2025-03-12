@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 763266426, guid: 0d5a12ace9a72c5439552031d039ac7b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -133,8 +133,7 @@ MonoBehaviour:
   healthDamagedOnTouch: -1
   knockback_power: 3.5
   destroy_self_on_touch: 1
-  invulnerability_duration: 1
-  IsInvulnerable: 0
+  ignoreBoomerang: 0
 --- !u!65 &-7149561542229692815
 BoxCollider:
   m_ObjectHideFlags: 0
