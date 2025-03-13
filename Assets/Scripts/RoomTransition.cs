@@ -5,7 +5,7 @@ using UnityEngine;
 public class RoomTransition : MonoBehaviour
 {
     private Camera cam;
-    public static float transitionTime = 2.5f;
+    public static float transitionTime = 2f;
 
     public float cameraDistanceY = 11f;
     public float cameraDistanceX = 16f;
